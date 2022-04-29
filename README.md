@@ -1,8 +1,8 @@
 # cop290 Game implementation
 Steps:
-1. Create a map usig pixel edit
-2. Create character and animation 
-3. Install keyboard controls
+1. Create a map - DONE 
+2. Create character - DONE and animation 
+3. Install keyboard controls -  DONE
 4. Install sockets
 5. Add buttons and sound
 6. Decide final goals for character
