@@ -475,22 +475,22 @@ for(  int i=0;i< length ;i++){
 	if(!iscollision){return false;} 	
 	else{
     //If any of the sides from A are outside of B
-    if( bottomA <= topB )
+    if( topA < topB )
     {
         iscollision= true;
     }
 
-    else if( topA >= bottomB )
+    else if( bottomA > bottomB )
     {
         iscollision= true;
     }
 
-    else if( rightA <= leftB )
+    else if( leftA < leftB )
     {
         iscollision= true;
     }
 
-    else if( leftA >= rightB )
+    else if( rightA > rightB )
     {
         iscollision= true;
     }
@@ -531,21 +531,290 @@ int main( int argc, char* args[] )
 			wall1.x = 672;
 			wall1.y = 224;
 			wall1.w = 64;
-			wall1.h = 2976;
+			wall1.h = 3008;
 			
-			/*SDL_Rect wall2;
-			wall2.x = 230;
-			wall2.y = 100;
-			wall2.w = 220;
-			wall2.h = 80;
+			SDL_Rect wall2;
+			wall2.x = 22* 32;
+			wall2.y = 25* 32;
+			wall2.w = 61* 32;
+			wall2.h = 2 * 32;
 			
 			SDL_Rect wall3;
-			wall3.x = 450;
-			wall3.y = 40;
-			wall3.w = 80;
-			wall3.h = 400;
-			*/
+			wall3.x = 46* 32;
+			wall3.y = 26* 32;
+			wall3.w = 2* 32;
+			wall3.h = 43* 32;
+			
+			SDL_Rect wall4;
+			wall4.x = 22* 32;
+			wall4.y = 57* 32;
+			wall4.w = 285* 32;
+			wall4.h = 2* 32;
+			
+			SDL_Rect wall5;
+			wall5.x = 22* 32;
+			wall5.y = 99* 32;
+			wall5.w = 49* 32;
+			wall5.h = 2 * 32;
+			
+			SDL_Rect wall6;
+			wall6.x = 70* 32;
+			wall6.y = 26* 32;
+			wall6.w = 2* 32;
+			wall6.h = 86* 32;
+			
+			SDL_Rect wall7;
+			wall7.x = 71* 32;
+			wall7.y = 110* 32;
+			wall7.w = 232* 32;
+			wall7.h = 2* 32;
+			
+			SDL_Rect wall8;
+			wall8.x = 255* 32;
+			wall8.y = 27* 32;
+			wall8.w = 2* 32;
+			wall8.h = 84 * 32;
+			
+			SDL_Rect wall9;
+			wall9.x = 150* 32;
+			wall9.y = 27* 32;
+			wall9.w = 107* 32;
+			wall9.h = 2* 32;
+			
+			SDL_Rect wall10;
+			wall10.x = 217* 32;
+			wall10.y = 28* 32;
+			wall10.w = 2* 32;
+			wall10.h = 31* 32;
+			
+			SDL_Rect wall11;
+			wall11.x = 165* 32;
+			wall11.y = 28* 32;
+			wall11.w = 2* 32;
+			wall11.h = 31* 32;
+			
+			SDL_Rect wall12;
+			wall12.x = 150* 32;
+			wall12.y = 28* 32;
+			wall12.w = 2* 32;
+			wall12.h = 31 * 32;
+			
+			SDL_Rect wall13;
+			wall13.x = 192* 32;
+			wall13.y = 25* 32;
+			wall13.w = 1* 32;
+			wall13.h = 38* 32;
+			
+			SDL_Rect wall14;
+			wall14.x = 22* 32;
+			wall14.y = 54* 32;
+			wall14.w = 25* 32;
+			wall14.h = 1* 32;
+			
+			SDL_Rect wall15;
+			wall15.x = 3* 32;
+			wall15.y = 94* 32;
+			wall15.w = 19* 32;
+			wall15.h = 2* 32;
+			
+			SDL_Rect wall16;
+			wall16.x = 22* 32;
+			wall16.y = 76* 32;
+			wall16.w = 8* 32;
+			wall16.h = 1* 32;
+			
+			SDL_Rect wall17;
+			wall17.x = 29* 32;
+			wall17.y = 62* 32;
+			wall17.w = 1* 32;
+			wall17.h = 15* 32;
+			
+			SDL_Rect wall18;
+			wall18.x = 29* 32;
+			wall18.y = 62* 32;
+			wall18.w = 18* 32;
+			wall18.h = 1* 32;
+			
+			SDL_Rect wall19;
+			wall19.x = 82* 32;
+			wall19.y = 25* 32;
+			wall19.w = 1* 32;
+			wall19.h = 6* 32;
+			
+			SDL_Rect wall20;
+			wall20.x = 82* 32;
+			wall20.y = 30* 32;
+			wall20.w = 12* 32;
+			wall20.h = 1* 32;
+			
+			SDL_Rect wall21;
+			wall21.x = 131* 32;
+			wall21.y = 58* 32;
+			wall21.w = 1* 32;
+			wall21.h = 10* 32;
+			
+			SDL_Rect wall22;
+			wall22.x = 134* 32;
+			wall22.y = 58* 32;
+			wall22.w = 1* 32;
+			wall22.h = 10* 32;
+			
+			SDL_Rect wall23;
+			wall23.x = 131* 32;
+			wall23.y = 67* 32;
+			wall23.w = 4* 32;
+			wall23.h = 1* 32;
+			
+			SDL_Rect wall24;
+			wall24.x = 140* 32;
+			wall24.y = 51* 32;
+			wall24.w = 1* 32;
+			wall24.h = 7* 32;
+			
+			SDL_Rect wall25;
+			wall25.x = 140* 32;
+			wall25.y = 28* 32;
+			wall25.w = 1* 32;
+			wall25.h = 11* 32;
+			
+			SDL_Rect wall26;
+			wall26.x = 140* 32;
+			wall26.y = 28* 32;
+			wall26.w = 11* 32;
+			wall26.h = 1* 32;
+			
+			SDL_Rect wall27;
+			wall27.x = 151* 32;
+			wall27.y = 44* 32;
+			wall27.w = 7* 32;
+			wall27.h = 1* 32;
+			
+			SDL_Rect wall28;
+			wall28.x = 157* 32;
+			wall28.y = 44* 32;
+			wall28.w = 1* 32;
+			wall28.h = 14* 32;
+			
+			SDL_Rect wall29;
+			wall29.x = 173* 32;
+			wall29.y = 58* 32;
+			wall29.w = 1* 32;
+			wall29.h = 5* 32;
+			
+			SDL_Rect wall30;
+			wall30.x = 211* 32;
+			wall30.y = 58* 32;
+			wall30.w = 1* 32;
+			wall30.h = 5* 32;
+			
+			SDL_Rect wall31;
+			wall31.x = 173* 32;
+			wall31.y = 62* 32;
+			wall31.w = 39* 32;
+			wall31.h = 1* 32;
+			
+			SDL_Rect wall32;
+			wall32.x = 190* 32;
+			wall32.y = 62* 32;
+			wall32.w = 1* 32;
+			wall32.h = 16* 32;
+			
+			SDL_Rect wall33;
+			wall33.x = 194* 32;
+			wall33.y = 62* 32;
+			wall33.w = 1* 32;
+			wall33.h = 16* 32;
+			
+			SDL_Rect wall34;
+			wall34.x = 194* 32;
+			wall34.y = 74* 32;
+			wall34.w = 23* 32;
+			wall34.h = 1* 32;
+			
+			SDL_Rect wall35;
+			wall35.x = 216* 32;
+			wall35.y = 74* 32;
+			wall35.w = 1* 32;
+			wall35.h = 26* 32;
+			
+			SDL_Rect wall36;
+			wall36.x = 193* 32;
+			wall36.y = 99* 32;
+			wall36.w = 24* 32;
+			wall36.h = 1* 32;
+			
+			SDL_Rect wall37;
+			wall37.x = 193* 32;
+			wall37.y = 98* 32;
+			wall37.w = 1* 32;
+			wall37.h = 2* 32;
+			
+			SDL_Rect wall38;
+			wall38.x = 198* 32;
+			wall38.y = 99* 32;
+			wall38.w = 1* 32;
+			wall38.h = 12* 32;
+			
+			SDL_Rect wall39;
+			wall39.x = 277* 32;
+			wall39.y = 35* 32;
+			wall39.w = 1* 32;
+			wall39.h = 23* 32;
+			
+			SDL_Rect wall40;
+			wall40.x = 283* 32;
+			wall40.y = 111* 32;
+			wall40.w = 2* 32;
+			wall40.h = 12* 32;
+			
+			SDL_Rect wall41;
+			wall41.x = 256* 32;
+			wall41.y = 67* 32;
+			wall41.w = 47* 32;
+			wall41.h = 1* 32;
 
+			SDL_Rect wall42;
+			wall42.x = 256* 32;
+			wall42.y = 86* 32;
+			wall42.w = 47* 32;
+			wall42.h = 1* 32;
+
+			SDL_Rect wall43;
+			wall43.x = 256* 32;
+			wall43.y = 89* 32;
+			wall43.w = 47* 32;
+			wall43.h = 1* 32;
+
+			SDL_Rect wall44;
+			wall44.x = 256* 32;
+			wall44.y = 95* 32;
+			wall44.w = 47* 32;
+			wall44.h = 1* 32;
+
+			SDL_Rect wall45;
+			wall45.x = 256* 32;
+			wall45.y = 103* 32;
+			wall45.w = 47* 32;
+			wall45.h = 1* 32;
+			
+			SDL_Rect wall46;
+			wall46.x = 286* 32;
+			wall46.y = 58* 32;
+			wall46.w = 1* 32;
+			wall46.h = 10* 32;
+
+			SDL_Rect wall47;
+			wall47.x = 302* 32;
+			wall47.y = 86* 32;
+			wall47.w = 1* 32;
+			wall47.h = 4* 32;
+
+			SDL_Rect wall48;
+			wall48.x = 302* 32;
+			wall48.y = 95* 32;
+			wall48.w = 1* 32;
+			wall48.h = 17* 32;
+			
 			//The camera area
 			SDL_Rect camera = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
 
@@ -566,9 +835,9 @@ int main( int argc, char* args[] )
 				}
 
 				//Move the dot and check collision
-				SDL_Rect wallarray[1]={wall1};
+				SDL_Rect wallarray[48]={wall1, wall2, wall3, wall4, wall5, wall6, wall7, wall8, wall9, wall10, wall11, wall12, wall13, wall14, wall15, wall16, wall17, wall18, wall19, wall20, wall21, wall22, wall23, wall24, wall25, wall26, wall27, wall28, wall29, wall30, wall31, wall32, wall33, wall34, wall35, wall36, wall37, wall38, wall39, wall40, wall41, wall42, wall43, wall44, wall45, wall46, wall47, wall48};
 				//dot.move( wall );
-				dot.move( wallarray ,1);
+				dot.move( wallarray ,48);
 
 
 				//Center the camera over the dot
@@ -600,8 +869,53 @@ int main( int argc, char* args[] )
 				//Render wall
 				SDL_SetRenderDrawColor(gRenderer,0x00,0x00,0x00,0xFF);
 				SDL_RenderDrawRect(gRenderer, &wall1);
-				//SDL_RenderDrawRect(gRenderer, &wall2);
-				//SDL_RenderDrawRect(gRenderer, &wall3);				
+				SDL_RenderDrawRect(gRenderer, &wall2);
+				SDL_RenderDrawRect(gRenderer, &wall3);				
+				SDL_RenderDrawRect(gRenderer, &wall4);
+				SDL_RenderDrawRect(gRenderer, &wall5);
+				SDL_RenderDrawRect(gRenderer, &wall6);
+				SDL_RenderDrawRect(gRenderer, &wall7);
+				SDL_RenderDrawRect(gRenderer, &wall8);
+				SDL_RenderDrawRect(gRenderer, &wall9);
+				SDL_RenderDrawRect(gRenderer, &wall10);
+				SDL_RenderDrawRect(gRenderer, &wall11);
+				SDL_RenderDrawRect(gRenderer, &wall12);
+				SDL_RenderDrawRect(gRenderer, &wall13);
+				SDL_RenderDrawRect(gRenderer, &wall14);
+				SDL_RenderDrawRect(gRenderer, &wall15);
+				SDL_RenderDrawRect(gRenderer, &wall16);				
+				SDL_RenderDrawRect(gRenderer, &wall17);
+				SDL_RenderDrawRect(gRenderer, &wall18);
+				SDL_RenderDrawRect(gRenderer, &wall19);
+				SDL_RenderDrawRect(gRenderer, &wall20);
+				SDL_RenderDrawRect(gRenderer, &wall21);
+				SDL_RenderDrawRect(gRenderer, &wall22);
+				SDL_RenderDrawRect(gRenderer, &wall23);
+				SDL_RenderDrawRect(gRenderer, &wall24);
+				SDL_RenderDrawRect(gRenderer, &wall25);
+				SDL_RenderDrawRect(gRenderer, &wall26);
+				SDL_RenderDrawRect(gRenderer, &wall27);
+				SDL_RenderDrawRect(gRenderer, &wall28);
+				SDL_RenderDrawRect(gRenderer, &wall29);
+				SDL_RenderDrawRect(gRenderer, &wall30);
+				SDL_RenderDrawRect(gRenderer, &wall31);				
+				SDL_RenderDrawRect(gRenderer, &wall32);
+				SDL_RenderDrawRect(gRenderer, &wall33);
+				SDL_RenderDrawRect(gRenderer, &wall34);
+				SDL_RenderDrawRect(gRenderer, &wall35);
+				SDL_RenderDrawRect(gRenderer, &wall36);
+				SDL_RenderDrawRect(gRenderer, &wall37);
+				SDL_RenderDrawRect(gRenderer, &wall38);
+				SDL_RenderDrawRect(gRenderer, &wall39);
+				SDL_RenderDrawRect(gRenderer, &wall40);
+				SDL_RenderDrawRect(gRenderer, &wall41);
+				SDL_RenderDrawRect(gRenderer, &wall42);
+				SDL_RenderDrawRect(gRenderer, &wall43);
+				SDL_RenderDrawRect(gRenderer, &wall44);
+				SDL_RenderDrawRect(gRenderer, &wall45);
+				SDL_RenderDrawRect(gRenderer, &wall46);
+				SDL_RenderDrawRect(gRenderer, &wall47);
+				SDL_RenderDrawRect(gRenderer, &wall48);
 				
 				//Render background
 				gBGTexture.render( 0, 0, &camera );
