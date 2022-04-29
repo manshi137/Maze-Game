@@ -502,15 +502,15 @@ int main( int argc, char* args[] )
 			//Set the wall
 			SDL_Rect wall1;
 			wall1.x = 150;
-			wall1.y = 40;
+			wall1.y = 20;
 			wall1.w = 80;
 			wall1.h = 400;
 			
 			SDL_Rect wall2;
-			wall2.x = 300;
-			wall2.y = 40;
-			wall2.w = 80;
-			wall2.h = 400;
+			wall2.x = 230;
+			wall2.y = 100;
+			wall2.w = 220;
+			wall2.h = 80;
 			
 			SDL_Rect wall3;
 			wall3.x = 450;
