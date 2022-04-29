@@ -8,8 +8,8 @@ and may not be redistributed without written permission.*/
 #include <string>
 
 //The dimensions of the level
-const int LEVEL_WIDTH = 11040;
-const int LEVEL_HEIGHT = 4096;
+const int LEVEL_WIDTH = 9952;
+const int LEVEL_HEIGHT = 3936;
 
 //Screen dimension constants
 const int SCREEN_WIDTH = 1024;
@@ -149,8 +149,8 @@ bool LTexture::loadFromFile( std::string path )
 	}
 	else
 	{
-		//Color key image
-		SDL_SetColorKey( loadedSurface, SDL_TRUE, SDL_MapRGB( loadedSurface->format, 0xFF, 0xFF, 0xFF ) );
+		//Color key image - colour to be made invisible from character
+		SDL_SetColorKey( loadedSurface, SDL_TRUE, SDL_MapRGB( loadedSurface->format, 0x03, 0xFC, 0x00 ) );
 
 		//Create texture from surface pixels
         newTexture = SDL_CreateTextureFromSurface( gRenderer, loadedSurface );
@@ -270,8 +270,8 @@ int LTexture::getHeight()
 Dot::Dot()
 {
     //Initialize the offsets
-    mPosX = 0;
-    mPosY = 0;
+    mPosX = 150;
+    mPosY = 50;
 
     //Initialize the velocity
     mVelX = 0;
@@ -409,7 +409,7 @@ bool loadMedia()
 	bool success = true;
 
 	//Load dot texture
-	if( !gDotTexture.loadFromFile( "phineas(1).bmp" ) )
+	if( !gDotTexture.loadFromFile( "phin(1).bmp" ) )
 	{
 		printf( "Failed to load dot texture!\n" );
 		success = false;
@@ -454,7 +454,9 @@ bool checkCollision( SDL_Rect a, SDL_Rect b[], int length )
     rightA = a.x + a.w;
     topA = a.y;
     bottomA = a.y + a.h;
-    bool iscollision =  false;
+    bool iscollision =  true;
+    
+    //true means no collision =  outside rectangles
 for(  int i=0;i< length ;i++){
     //Calculate the sides of rect B
     leftB = b[i].x;
@@ -462,29 +464,29 @@ for(  int i=0;i< length ;i++){
     topB = b[i].y;
     bottomB = b[i].y + b[i].h;
 	
-	if(iscollision){return true;} 	
+	if(!iscollision){return false;} 	
 	else{
     //If any of the sides from A are outside of B
     if( bottomA <= topB )
     {
-        iscollision= false;
+        iscollision= true;
     }
 
     else if( topA >= bottomB )
     {
-        iscollision= false;
+        iscollision= true;
     }
 
     else if( rightA <= leftB )
     {
-        iscollision= false;
+        iscollision= true;
     }
 
     else if( leftA >= rightB )
     {
-        iscollision= false;
+        iscollision= true;
     }
-    else{ iscollision= true;}}
+    else{ iscollision= false;}}
 }
     //If none of the sides from A are outside B
     
@@ -519,15 +521,15 @@ int main( int argc, char* args[] )
 			//Set the wall
 			SDL_Rect wall1;
 			wall1.x = 150;
-			wall1.y = 40;
+			wall1.y = 20;
 			wall1.w = 80;
 			wall1.h = 400;
 			
 			SDL_Rect wall2;
-			wall2.x = 300;
-			wall2.y = 40;
-			wall2.w = 80;
-			wall2.h = 400;
+			wall2.x = 230;
+			wall2.y = 100;
+			wall2.w = 220;
+			wall2.h = 80;
 			
 			SDL_Rect wall3;
 			wall3.x = 450;
@@ -559,6 +561,11 @@ int main( int argc, char* args[] )
 				//dot.move( wall );
 				dot.move( wallarray , 3);
 				
+				//Render wall
+				SDL_SetRenderDrawColor(gRenderer,0x00,0x00,0x00,0xFF);
+				SDL_RenderDrawRect(gRenderer, &wall1);
+				SDL_RenderDrawRect(gRenderer, &wall2);
+				SDL_RenderDrawRect(gRenderer, &wall3);
 				
 				
 				//Center the camera over the dot
