@@ -8,6 +8,8 @@ and may not be redistributed without written permission.*/
 //#include <SDL_image.h>
 #include <stdio.h>
 #include <string>
+#include <iostream>
+using namespace std;
 
 //The dimensions of the level
 const int LEVEL_WIDTH = 9952;
@@ -109,7 +111,7 @@ class Ghost
 		static const int GHOST_HEIGHT = 20;
 
 		//Maximum axis velocity of the dot
-		static const int GHOST_VEL = 10;
+		static const int GHOST_VEL = 3;
 
 		//Initializes the variables
 		Ghost();
@@ -372,6 +374,7 @@ void Dot::handleEvent( SDL_Event& e )
 //===================
 void Ghost::handleEvent( SDL_Event& e )
 {
+cout<<"ghost1 handlevent"<<endl;
     //If a key was pressed
 	if( e.type == SDL_KEYDOWN && e.key.repeat == 0 )
     {
@@ -379,9 +382,13 @@ void Ghost::handleEvent( SDL_Event& e )
         switch( e.key.keysym.sym )
         {
             case SDLK_UP: ghostVelY -= rand()%GHOST_VEL +1; break;
+            
             case SDLK_DOWN: ghostVelY += rand()%GHOST_VEL +1; break;
             case SDLK_LEFT: ghostVelX -= rand()%GHOST_VEL +1; break;
+            
             case SDLK_RIGHT: ghostVelX += rand()%GHOST_VEL +1; break;
+            cout<<ghostVelY;
+            cout<<ghostVelX;
         }
     }
     //If a key was released
@@ -394,6 +401,8 @@ void Ghost::handleEvent( SDL_Event& e )
             case SDLK_DOWN: ghostVelY -= rand()%GHOST_VEL +1; break;
             case SDLK_LEFT: ghostVelX += rand()%GHOST_VEL +1; break;
             case SDLK_RIGHT: ghostVelX -= rand()%GHOST_VEL +1; break;
+            cout<<ghostVelY;
+            cout<<ghostVelX;
         }
     }
 }
@@ -1026,6 +1035,7 @@ int main( int argc, char* args[] )
 
 					//Handle input for the dot
 					dot.handleEvent( e );
+					ghost1.handleEvent( e);
 				}
 
 				//Move the dot and check collision
