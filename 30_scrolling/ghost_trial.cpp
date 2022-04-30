@@ -390,10 +390,10 @@ void Ghost::handleEvent( SDL_Event& e )
         //Adjust the velocity
         switch( e.key.keysym.sym )
         {
-            case SDLK_UP: ghostVelY += GHOST_VEL; break;
-            case SDLK_DOWN: ghostVelY -= GHOST_VEL; break;
-            case SDLK_LEFT: ghostVelX += GHOST_VEL; break;
-            case SDLK_RIGHT: ghostVelX -= GHOST_VEL; break;
+            case SDLK_UP: ghostVelY +=rand()%GHOST_VEL +1; break;
+            case SDLK_DOWN: ghostVelY -= rand()%GHOST_VEL +1; break;
+            case SDLK_LEFT: ghostVelX += rand()%GHOST_VEL +1; break;
+            case SDLK_RIGHT: ghostVelX -= rand()%GHOST_VEL +1; break;
         }
     }
 }
