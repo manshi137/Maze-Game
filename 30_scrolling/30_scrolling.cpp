@@ -84,7 +84,7 @@ class Dot
 		static const int DOT_HEIGHT = 40;
 
 		//Maximum axis velocity of the dot
-		static const int DOT_VEL = 5;
+		static const int DOT_VEL = 10;
 
 		//Initializes the variables
 		Dot();
@@ -121,10 +121,10 @@ class Ghost
 		static const int GHOST_HEIGHT = 20;
 
 		//Maximum axis velocity of the dot
-		static const int GHOST_VEL = 3;
+		static const int GHOST_VEL = -5;
 
 		//Initializes the variables
-		Ghost();
+		Ghost(int x, int y);
 
 		//Takes key presses and adjusts the ghost's velocity
 		void handleEvent( SDL_Event& e );
@@ -348,11 +348,11 @@ Dot::Dot()
 }
 //===========
 
-Ghost::Ghost()
+Ghost::Ghost(int x, int y)
 {
     //Initialize the offsets
-    ghostPosX = 672;
-    ghostPosY = 224;
+    ghostPosX = x;
+    ghostPosY = y;
     
     //Set collision box dimension
 	ghostCollider.w = GHOST_WIDTH;
@@ -400,12 +400,12 @@ cout<<"ghost1 handlevent"<<endl;
         //Adjust the velocity
         switch( e.key.keysym.sym )
         {
-            case SDLK_UP: ghostVelY -= rand()%GHOST_VEL +1; break;
+            case SDLK_UP: ghostVelY -= rand()%10 ; break;
             
-            case SDLK_DOWN: ghostVelY += rand()%GHOST_VEL +1; break;
-            case SDLK_LEFT: ghostVelX -= rand()%GHOST_VEL +1; break;
+            case SDLK_DOWN: ghostVelY += rand()%10 ; break;
+            case SDLK_LEFT: ghostVelX -= rand()%10 ; break;
             
-            case SDLK_RIGHT: ghostVelX += rand()%GHOST_VEL +1; break;
+            case SDLK_RIGHT: ghostVelX += rand()%10 ; break;
             cout<<ghostVelY;
             cout<<ghostVelX;
         }
@@ -416,10 +416,10 @@ cout<<"ghost1 handlevent"<<endl;
         //Adjust the velocity
         switch( e.key.keysym.sym )
         {
-            case SDLK_UP: ghostVelY +=rand()%GHOST_VEL +1; break;
-            case SDLK_DOWN: ghostVelY -= rand()%GHOST_VEL +1; break;
-            case SDLK_LEFT: ghostVelX += rand()%GHOST_VEL +1; break;
-            case SDLK_RIGHT: ghostVelX -= rand()%GHOST_VEL +1; break;
+            case SDLK_UP: ghostVelY +=rand()%10 ; break;
+            case SDLK_DOWN: ghostVelY -= rand()%10 ; break;
+            case SDLK_LEFT: ghostVelX += rand()%10 ; break;
+            case SDLK_RIGHT: ghostVelX -= rand()%10 ; break;
             cout<<ghostVelY;
             cout<<ghostVelX;
         }
@@ -588,7 +588,7 @@ bool loadMedia()
 	gKeyPressSurfaces[ KEY_PRESS_SURFACE_DEFAULT ].loadFromFile( "phinright.png");
 	
 	//Load ghost texture
-	if( !ghostTexture.loadFromFile( "bg.png" ) )
+	if( !ghostTexture.loadFromFile( "dog(2).png" ) )
 	{
 		printf( "Failed to load ghost texture!\n" );
 		success = false;
@@ -753,7 +753,11 @@ int main( int argc, char* args[] )
 
 			//The dot that will be moving around on the screen
 			Dot dot;
-			Ghost ghost1;
+			Ghost ghost1(672,224);
+			//ghost1.Ghost(672,224);
+			Ghost ghost2(22* 32,25* 32 -32);
+			//ghost2.Ghost(22* 32,25* 32 -32);
+			
 			
 			//Set the wall
 			SDL_Rect wall1;
@@ -1093,6 +1097,7 @@ int main( int argc, char* args[] )
 					//Handle input for the dot
 					dot.handleEvent( e );
 					ghost1.handleEvent( e);
+					ghost2.handleEvent( e);
 				}
 
 				//Move the dot and check collision
@@ -1100,6 +1105,7 @@ int main( int argc, char* args[] )
 				//dot.move( wall );
 				dot.move( wallarray ,48);
 				ghost1.move(wallarray, 48);
+				ghost2.move(wallarray, 48);
 
 				//Center the camera over the dot
 				camera.x = ( dot.getPosX() + Dot::DOT_WIDTH / 2 ) - SCREEN_WIDTH / 2;
@@ -1188,6 +1194,7 @@ int main( int argc, char* args[] )
 				//gDotTexture.render(camera.x, camera.y );
 				dot.render( camera.x, camera.y );
 				ghost1.render( camera.x, camera.y );
+				ghost2.render( camera.x, camera.y );
 				//Update screen
 				SDL_RenderPresent( gRenderer );
 			}
