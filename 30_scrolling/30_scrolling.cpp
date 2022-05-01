@@ -1189,7 +1189,7 @@ int main( int argc, char* args[] )
 			
 			
 			//The camera area
-			SDL_Rect camera = { 0, 0, SCREEN_WIDTH*2, SCREEN_HEIGHT*2 };
+			SDL_Rect camera = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT};
 			
 			//Set default current surface
 			gDotTexture = gKeyPressSurfaces[ KEY_PRESS_SURFACE_DEFAULT ];
