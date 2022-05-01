@@ -16,8 +16,8 @@ const int LEVEL_WIDTH = 9952;
 const int LEVEL_HEIGHT = 3936;
 
 //Screen dimension constants
-const int SCREEN_WIDTH = 1024;
-const int SCREEN_HEIGHT = 960;
+const int SCREEN_WIDTH = 960;
+const int SCREEN_HEIGHT = 720;
 
 //Key press surfaces constants
 enum KeyPressSurfaces
@@ -82,6 +82,11 @@ class Dot
 		//The dimensions of the dot
 		static const int DOT_WIDTH = 40;
 		static const int DOT_HEIGHT = 40;
+		//The dimensions of the dot
+		static const int GHOST_WIDTH = 20;
+		static const int GHOST_HEIGHT = 20;
+
+		
 
 		//Maximum axis velocity of the dot
 		static const int DOT_VEL = 10;
@@ -93,7 +98,7 @@ class Dot
 		void handleEvent( SDL_Event& e );
 
 		//Moves the dot and checks collision
-		void move( SDL_Rect wall[] , int length);
+		void move( SDL_Rect wall[] , int length1, SDL_Rect ghostCollider);
 
 		//Shows the dot on the screen relative to the camera
 		void render( int camX, int camY );
@@ -111,6 +116,8 @@ class Dot
 		
 		//Dot's collision box
 		SDL_Rect mCollider;
+		//Ghost's collision box
+		SDL_Rect ghostCollider;
 };
 //========================================================================================================
 class Ghost
@@ -133,11 +140,13 @@ class Ghost
 		void move( SDL_Rect wall[] , int length);
 
 		//Shows the ghost on the screen relative to the camera
-		void render( int camX, int camY );
+		void render( int camX, int camY, int isDoc );
 
 		//Position accessors
 		int getPosX();
 		int getPosY();
+		//Ghost's collision box
+		SDL_Rect ghostCollider;
 
     private:
 		//The X and Y offsets of the ghost
@@ -146,8 +155,7 @@ class Ghost
 		//The velocity of the ghost
 		int ghostVelX, ghostVelY;
 		
-		//Ghost's collision box
-		SDL_Rect ghostCollider;
+		
 };
 //=================================================================================================================
 
@@ -171,6 +179,7 @@ LTexture gKeyPressSurfaces[ KEY_PRESS_SURFACE_TOTAL ];
 bool checkCollision( SDL_Rect a, SDL_Rect b[], int length );
 
 bool checkCollisionC( SDL_Rect c, SDL_Rect b[], int length );
+bool checkCollisionAC( SDL_Rect a, SDL_Rect c );
 
 //The window we'll be rendering to
 SDL_Window* gWindow = NULL;
@@ -180,7 +189,8 @@ SDL_Renderer* gRenderer = NULL;
 
 //Scene textures
 LTexture gDotTexture;
-LTexture ghostTexture;
+LTexture ghostTexture1;
+LTexture ghostTexture2;
 LTexture gBGTexture;
 
 LTexture::LTexture()
@@ -341,6 +351,10 @@ Dot::Dot()
     //Set collision box dimension
 	mCollider.w = DOT_WIDTH;
 	mCollider.h = DOT_HEIGHT;
+	
+	//Set collision box dimension
+	ghostCollider.w = GHOST_WIDTH;
+	ghostCollider.h = GHOST_HEIGHT;
 
     //Initialize the velocity
     mVelX = 0;
@@ -393,7 +407,6 @@ void Dot::handleEvent( SDL_Event& e )
 //===================
 void Ghost::handleEvent( SDL_Event& e )
 {
-cout<<"ghost1 handlevent"<<endl;
     //If a key was pressed
 	if( e.type == SDL_KEYDOWN && e.key.repeat == 0 )
     {
@@ -427,13 +440,13 @@ cout<<"ghost1 handlevent"<<endl;
 }
 //=====================
 
-void Dot::move(SDL_Rect wall[], int length)
+void Dot::move(SDL_Rect wall[], int length1 ,SDL_Rect ghostCollider)
 {
     //Move the dot left or right
     mPosX += mVelX;
 mCollider.x = mPosX;
     //If the dot went too far to the left or right
-    if( ( mPosX < 0 ) || ( mPosX + DOT_WIDTH > LEVEL_WIDTH ) || checkCollision( mCollider, wall, length ) )
+    if( ( mPosX < 0 ) || ( mPosX + DOT_WIDTH > LEVEL_WIDTH ) || checkCollision( mCollider, wall, length1 ) )
     {
         //Move back
         mPosX -= mVelX;
@@ -445,12 +458,16 @@ mCollider.x = mPosX;
 	mCollider.y = mPosY;    
 
     //If the dot went too far up or down
-    if( ( mPosY < 0 ) || ( mPosY + DOT_HEIGHT > LEVEL_HEIGHT ) || checkCollision( mCollider, wall, length ))
+    if( ( mPosY < 0 ) || ( mPosY + DOT_HEIGHT > LEVEL_HEIGHT ) || checkCollision( mCollider, wall, length1 ))
     {
         //Move back
         mPosY -= mVelY;
         mCollider.y = mPosY;
     }
+    if(( mPosY < 0 ) || ( mPosY + DOT_HEIGHT > LEVEL_HEIGHT ) || !checkCollisionAC(mCollider, ghostCollider)){
+    mPosX= 97* 32;
+			
+    mPosY= 57* 32;}
 }
 
 //=============
@@ -489,10 +506,13 @@ void Dot::render( int camX, int camY )
 	gDotTexture.render( mPosX - camX, mPosY - camY );
 }
 //===========
-void Ghost::render( int camX, int camY )
+void Ghost::render( int camX, int camY,int isDoc )
 {
     //Show the dot relative to the camera
-	ghostTexture.render( ghostPosX - camX, ghostPosY - camY );
+    if(isDoc==1){
+	ghostTexture1.render( ghostPosX - camX, ghostPosY - camY );}
+	else{
+	ghostTexture2.render( ghostPosX - camX, ghostPosY - camY );}
 }
 //===========
 int Dot::getPosX()
@@ -587,8 +607,15 @@ bool loadMedia()
 	gKeyPressSurfaces[ KEY_PRESS_SURFACE_DOWN ].loadFromFile( "phinright.png");
 	gKeyPressSurfaces[ KEY_PRESS_SURFACE_DEFAULT ].loadFromFile( "phinright.png");
 	
-	//Load ghost texture
-	if( !ghostTexture.loadFromFile( "dog(2).png" ) )
+	//Load ghost texture1
+	if( !ghostTexture1.loadFromFile( "doc.png" ) )
+	{
+		printf( "Failed to load ghost texture!\n" );
+		success = false;
+	}
+	
+	//Load ghost texture2
+	if( !ghostTexture2.loadFromFile( "dog(2).png" ) )
 	{
 		printf( "Failed to load ghost texture!\n" );
 		success = false;
@@ -608,7 +635,8 @@ void close()
 {
 	//Free loaded images
 	gDotTexture.free();
-	ghostTexture.free();
+	ghostTexture1.free();
+	ghostTexture2.free();
 	gBGTexture.free();
 
 	//Destroy window	
@@ -621,6 +649,7 @@ void close()
 	IMG_Quit();
 	SDL_Quit();
 }
+//check collsion between player and walls
 
 bool checkCollision( SDL_Rect a,SDL_Rect b[], int length )
 {
@@ -673,6 +702,8 @@ for(  int i=0;i< length ;i++){
     
  return iscollisionA;   
 }
+
+//check collision between dogs and walls
 
 bool checkCollisionC( SDL_Rect c, SDL_Rect b[], int length )
 {
@@ -728,6 +759,112 @@ for(  int i=0;i< length ;i++){
  return iscollisionC;   
 }
 
+//check collision between dogs(b) and player (a)
+/*bool checkCollisionAC( SDL_Rect a, SDL_Rect b[], int length )
+{
+    //The sides of the rectangles
+    int leftA, leftB;
+    int rightA, rightB;
+    int topA, topB;
+    int bottomA, bottomB;
+
+    //Calculate the sides of rect A
+    leftA = a.x;
+    rightA = a.x + a.w;
+    topA = a.y;
+    bottomA = a.y + a.h;
+    bool iscollisionAC =  true;
+for(int i=0;i<length;i++){
+    //Calculate the sides of rect B
+    leftB = b[i].x;
+    rightB = b[i].x + b[i].w;
+    topB = b[i].y;
+    bottomB = b[i].y + b[i].h;
+
+    //If any of the sides from A are outside of B
+    if(!iscollisionAC){return false;} 	
+	else{
+    //If any of the sides from C are outside of B
+    if( bottomA <= topB )
+    {
+        iscollisionAC= true;
+    }
+
+    else if( topA >= bottomB )
+    {
+        iscollisionAC= true;
+    }
+
+    else if( rightA <= leftB )
+    {
+        iscollisionAC= true;
+    }
+
+    else if( leftA >= rightB )
+    {
+        iscollisionAC= true;
+    }
+    else{ iscollisionAC= false;}}
+    }
+
+    //If none of the sides from A are outside B
+    cout<<"false";
+    return iscollisionAC;
+}
+*/
+//check collision between dogs and player 
+bool checkCollisionAC( SDL_Rect a, SDL_Rect b )
+{
+    //The sides of the rectangles
+    int leftA, leftB;
+    int rightA, rightB;
+    int topA, topB;
+    int bottomA, bottomB;
+
+    //Calculate the sides of rect A
+    leftA = a.x;
+    rightA = a.x + a.w;
+    topA = a.y;
+    bottomA = a.y + a.h;
+
+    //Calculate the sides of rect B
+    leftB = b.x;
+    rightB = b.x + b.w;
+    topB = b.y;
+    bottomB = b.y + b.h;
+
+    //If any of the sides from A are outside of B
+    if( bottomA <= topB )
+    {
+    cout<<"true";
+        return true;
+    }
+
+    if( topA >= bottomB )
+    {
+    cout<<"true";
+        return true;
+    }
+
+    if( rightA <= leftB )
+    {
+    cout<<"true";
+        return true;
+    }
+
+    if( leftA >= rightB )
+    {
+    cout<<"true";
+        return true;
+    }
+
+    //If none of the sides from A are outside B
+    cout<<"false";
+    return false;
+}
+
+
+
 
 int main( int argc, char* args[] )
 {
@@ -753,11 +890,13 @@ int main( int argc, char* args[] )
 
 			//The dot that will be moving around on the screen
 			Dot dot;
-			Ghost ghost1(672,224);
+			Ghost ghost1(22* 32,25* 32 -32);
 			//ghost1.Ghost(672,224);
 			Ghost ghost2(22* 32,25* 32 -32);
+			Ghost ghost3(131* 32-64,58* 32);
 			//ghost2.Ghost(22* 32,25* 32 -32);
 			
+			Ghost ghostarray[2]={ghost1,ghost2};
 			
 			//Set the wall
 			SDL_Rect wall1;
@@ -1050,7 +1189,7 @@ int main( int argc, char* args[] )
 			
 			
 			//The camera area
-			SDL_Rect camera = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
+			SDL_Rect camera = { 0, 0, SCREEN_WIDTH*2, SCREEN_HEIGHT*2 };
 			
 			//Set default current surface
 			gDotTexture = gKeyPressSurfaces[ KEY_PRESS_SURFACE_DEFAULT ];
@@ -1098,14 +1237,21 @@ int main( int argc, char* args[] )
 					dot.handleEvent( e );
 					ghost1.handleEvent( e);
 					ghost2.handleEvent( e);
+					ghost3.handleEvent( e);
 				}
 
 				//Move the dot and check collision
 				SDL_Rect wallarray[48]={wall1, wall2, wall3, wall4, wall5, wall6, wall7, wall8, wall9, wall10, wall11, wall12, wall13, wall14, wall15, wall16, wall17, wall18, wall19, wall20, wall21, wall22, wall23, wall24, wall25, wall26, wall27, wall28, wall29, wall30, wall31, wall32, wall33, wall34, wall35, wall36, wall37, wall38, wall39, wall40, wall41, wall42, wall43, wall44, wall45, wall46, wall47, wall48};
 				//dot.move( wall );
-				dot.move( wallarray ,48);
+				
+				/*for(int i=0;i<2;i++){
+				dot.move( wallarray ,48,ghostarray[i].ghostCollider );}*/
+				
+				dot.move( wallarray ,48,ghost1.ghostCollider );
+				
 				ghost1.move(wallarray, 48);
 				ghost2.move(wallarray, 48);
+				ghost3.move(wallarray, 48);
 
 				//Center the camera over the dot
 				camera.x = ( dot.getPosX() + Dot::DOT_WIDTH / 2 ) - SCREEN_WIDTH / 2;
@@ -1193,8 +1339,9 @@ int main( int argc, char* args[] )
 				//Render objects
 				//gDotTexture.render(camera.x, camera.y );
 				dot.render( camera.x, camera.y );
-				ghost1.render( camera.x, camera.y );
-				ghost2.render( camera.x, camera.y );
+				ghost1.render( camera.x, camera.y,1 );
+				ghost2.render( camera.x, camera.y,0 );
+				ghost3.render( camera.x, camera.y,0 );
 				//Update screen
 				SDL_RenderPresent( gRenderer );
 			}
