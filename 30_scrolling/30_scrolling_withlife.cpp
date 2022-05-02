@@ -112,7 +112,8 @@ class Dot
 		
 		//life attribute
 		int life=5;
-		
+		int points = 0;
+		bool pointsupdated = false;
 		bool manshi=true; // true means no collision
 		//false means collision
 		
@@ -201,12 +202,30 @@ LTexture gDotTexture;
 LTexture ghostTexture1;
 LTexture ghostTexture2;
 LTexture gBGTexture;
+LTexture oops;
 LTexture lifeT1;
 LTexture lifeT2;
 LTexture lifeT3;
 LTexture lifeT4;
 LTexture lifeT5;
+LTexture task1;
+LTexture task2;
+LTexture task3;
+LTexture task41;
 
+LTexture task42;
+LTexture task43;
+LTexture task44;
+LTexture task5;
+LTexture task61;
+LTexture task62;
+LTexture task63;
+
+LTexture task7;
+LTexture task8;
+
+LTexture taskdone;
+LTexture point1;
 LTexture::LTexture()
 {
 	//Initialize
@@ -359,8 +378,8 @@ int LTexture::getHeight()
 Dot::Dot()
 {
     //Initialize the offsets
-    mPosX = 672;
-    mPosY = 224;
+    mPosX = 301*32;
+    mPosY = 57*32;
     
     //Set collision box dimension
 	mCollider.w = DOT_WIDTH;
@@ -477,7 +496,7 @@ mCollider.x = mPosX;
         mCollider.y = mPosY;
     }
     if(( mPosY < 0 ) || ( mPosY + DOT_HEIGHT > LEVEL_HEIGHT ) || !checkCollisionAC(mCollider, ghostCollider)){
-    mPosX= 97* 32;
+    mPosX= 306* 32;
 			
     mPosY= 57* 32;}
 }
@@ -616,9 +635,9 @@ bool loadMedia()
 	
 	gKeyPressSurfaces[ KEY_PRESS_SURFACE_RIGHT ].loadFromFile( "phinright.png" );
 	gKeyPressSurfaces[ KEY_PRESS_SURFACE_LEFT ].loadFromFile( "phinleft.png");
-	gKeyPressSurfaces[ KEY_PRESS_SURFACE_UP ].loadFromFile( "phinright.png");
-	gKeyPressSurfaces[ KEY_PRESS_SURFACE_DOWN ].loadFromFile( "phinright.png");
-	gKeyPressSurfaces[ KEY_PRESS_SURFACE_DEFAULT ].loadFromFile( "phinright.png");
+	gKeyPressSurfaces[ KEY_PRESS_SURFACE_UP ].loadFromFile( "phinleft.png");
+	gKeyPressSurfaces[ KEY_PRESS_SURFACE_DOWN ].loadFromFile( "phinleft.png");
+	gKeyPressSurfaces[ KEY_PRESS_SURFACE_DEFAULT ].loadFromFile( "phinleft.png");
 	
 	//Load ghost texture1
 	if( !ghostTexture1.loadFromFile( "doc.png" ) )
@@ -665,7 +684,89 @@ bool loadMedia()
 		printf( "Failed to load background texture!\n" );
 		success = false;
 	}
-
+	if( !task1.loadFromFile( "task1.png" ) )
+	{
+		printf( "Failed to load background texture!\n" );
+		success = false;
+	}
+	if( !task2.loadFromFile( "task2.png" ) )
+	{
+		printf( "Failed to load background texture!\n" );
+		success = false;
+	}
+	if( !task3.loadFromFile( "task3.png" ) )
+	{
+		printf( "Failed to load background texture!\n" );
+		success = false;
+	}
+	if( !task41.loadFromFile( "task4.1.png" ) )
+	{
+		printf( "Failed to load background texture!\n" );
+		success = false;
+	}
+	if( !task42.loadFromFile( "task4.2.png" ) )
+	{
+		printf( "Failed to load background texture!\n" );
+		success = false;
+	}
+	if( !task43.loadFromFile( "task4.3.png" ) )
+	{
+		printf( "Failed to load background texture!\n" );
+		success = false;
+	}
+	if( !task44.loadFromFile( "task4.4.png" ) )
+	{
+		printf( "Failed to load background texture!\n" );
+		success = false;
+	}
+	if( !task5.loadFromFile( "task5.png" ) )
+	{
+		printf( "Failed to load background texture!\n" );
+		success = false;
+	}
+	if( !task61.loadFromFile( "task6.png" ) )
+	{
+		printf( "Failed to load background texture!\n" );
+		success = false;
+	}
+	if( !task62.loadFromFile( "task6.2.png" ) )
+	{
+		printf( "Failed to load background texture!\n" );
+		success = false;
+	}
+	if( !task63.loadFromFile( "task6.3.png" ) )
+	{
+		printf( "Failed to load background texture!\n" );
+		success = false;
+	}
+	if( !task7.loadFromFile( "task7.png" ) )
+	{
+		printf( "Failed to load background texture!\n" );
+		success = false;
+	}
+	if( !task8.loadFromFile( "task8.png" ) )
+	{
+		printf( "Failed to load background texture!\n" );
+		success = false;
+	}
+	
+	if( !taskdone.loadFromFile( "taskdone.png" ) )
+	{
+		printf( "Failed to load background texture!\n" );
+		success = false;
+	}
+	if( !point1.loadFromFile( "coin(1).png" ) )
+	{
+		printf( "Failed to load background texture!\n" );
+		success = false;
+	}
+	
+if( !oops.loadFromFile( "oops.png" ) )
+	{
+		printf( "Failed to load background texture!\n" );
+		success = false;
+	}
+	
 	return success;
 }
 
@@ -683,6 +784,22 @@ lifeT1.free();
 	lifeT3.free();
 	lifeT4.free();
 	lifeT5.free();
+	task1.free();
+	task2.free();
+	task3.free();
+	task41.free();
+	task42.free();
+	task43.free();
+	task44.free();
+	task5.free();
+	task61.free();
+	task62.free();
+	task63.free();
+	task7.free();
+	task8.free();
+	taskdone.free();
+	point1.free();
+	oops.free();
 	
 	//Destroy window	
 	SDL_DestroyRenderer( gRenderer );
@@ -861,6 +978,7 @@ bool checkCollisionlife( SDL_Rect a, SDL_Rect b[], int length )
 }
 
 //check collision between dogs and player 
+//check collision between two rectangles
 bool checkCollisionAC( SDL_Rect a, SDL_Rect b )
 {
     //The sides of the rectangles
@@ -944,7 +1062,6 @@ int main( int argc, char* args[] )
 			Ghost ghost3(131* 32-64,58* 32);
 			//ghost2.Ghost(22* 32,25* 32 -32);
 			
-			Ghost ghostarray[2]={ghost2,ghost3};
 			
 			//Set the wall
 			SDL_Rect wall1;
@@ -968,7 +1085,7 @@ int main( int argc, char* args[] )
 			SDL_Rect wall4;
 			wall4.x = 22* 32;
 			wall4.y = 57* 32 -32 ;
-			wall4.w = 285* 32;
+			wall4.w = 281* 32;
 			wall4.h = 2* 32 + 32;
 			
 			SDL_Rect wall5;
@@ -1235,6 +1352,95 @@ int main( int argc, char* args[] )
 			wall48.w = 1* 32+64;
 			wall48.h = 17* 32;
 			
+			SDL_Rect wall49;//lhc
+			wall49.x = 190* 32;
+			wall49.y = 78*32 -32;
+			wall49.w = 5*32;
+			wall49.h = 2*32 +32;
+			
+			SDL_Rect wall50;//kailash
+			wall50.x = 266* 32 -32;
+			wall50.y = 84*32 -32;
+			wall50.w = 2*32 +32;
+			wall50.h = 2*32 +32;
+			
+			SDL_Rect wall51;//himadri
+			wall51.x = 297* 32 -32;
+			wall51.y = 84*32 -32;
+			wall51.w = 2*32 +32;
+			wall51.h = 2*32 +32;
+			
+			SDL_Rect wall52;//lib
+			wall52.x = 164* 32 -32;
+			wall52.y = 48*32 -32;
+			wall52.w = 2*32 +32;
+			wall52.h = 2*32 +32;
+			
+			SDL_Rect wall53;//sac
+			wall53.x = 46* 32 -32;
+			wall53.y = 67*32 -32;
+			wall53.w = 2*32 +32;
+			wall53.h = 2*32 +32;
+			
+			SDL_Rect wall54;//csc
+			wall54.x = 215* 32 -32;
+			wall54.y = 36*32 -32;
+			wall54.w = 2*32 +32;
+			wall54.h = 2*32 +32;
+			
+			SDL_Rect wall55;//iit market
+			wall55.x = 244* 32 -32;
+			wall55.y = 108*32 -32;
+			wall55.w = 2*32 +32;
+			wall55.h = 2*32 +32;
+			
+			SDL_Rect wall56;//amul
+			wall56.x = 163* 32 -32;
+			wall56.y = 29*32 -32;
+			wall56.w = 2*32 +32;
+			wall56.h = 2*32 +32;
+			
+			SDL_Rect wall57;//ccd
+			wall57.x = 191* 32 -32;
+			wall57.y = 25*32 -32;
+			wall57.w = 2*32 +32;
+			wall57.h = 2*32 +32;
+			
+			SDL_Rect wall58;//delhi 16
+			wall58.x = 23* 32 -32;
+			wall58.y = 38*32 -32;
+			wall58.w = 2*32 +32;
+			wall58.h = 2*32 +32;
+			
+			SDL_Rect wall59;//masala mix
+			wall59.x = 68* 32 -32;
+			wall59.y = 50*32 -32;
+			wall59.w = 2*32 +32;
+			wall59.h = 2*32 +32;
+			
+			SDL_Rect wall60;//tennis
+			wall60.x = 34* 32 -32;
+			wall60.y = 52*32 -32;
+			wall60.w = 2*32 +32;
+			wall60.h = 2*32 +32;
+			
+			SDL_Rect wall61;//hockey
+			wall61.x = 136* 32 -32;
+			wall61.y = 67*32 -32;
+			wall61.w = 2*32 +32;
+			wall61.h = 2*32 +32;
+			
+			SDL_Rect wall62;//cricket
+			wall62.x = 120* 32;
+			wall62.y = 67*32 -32;
+			wall62.w = 10*32 ;
+			wall62.h = 2*32 +32;
+			
+			SDL_Rect wall63;
+			wall63.x = 303* 32;
+			wall63.y = 57* 32 -32 ;
+			wall63.w = 4* 32;
+			wall63.h = 2* 32 + 32;
 			
 			//The camera area
 			SDL_Rect camera = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
@@ -1259,22 +1465,122 @@ int main( int argc, char* args[] )
 						//Select surfaces based on key press
 						switch( e.key.keysym.sym )
 						{
-							case SDLK_UP:
+						case SDLK_UP:
 							gDotTexture = gKeyPressSurfaces[ KEY_PRESS_SURFACE_UP ];
 							break;
 
-							case SDLK_DOWN:
+						case SDLK_DOWN:
 							gDotTexture = gKeyPressSurfaces[ KEY_PRESS_SURFACE_DOWN ];
 							break;
 
-							case SDLK_LEFT:
+						case SDLK_LEFT:
 							gDotTexture = gKeyPressSurfaces[ KEY_PRESS_SURFACE_LEFT ];
 							break;
 
-							case SDLK_RIGHT:
+						case SDLK_RIGHT:
 							gDotTexture = gKeyPressSurfaces[ KEY_PRESS_SURFACE_RIGHT ];
 							break;
-
+							
+						case SDLK_1://task1
+							if(!checkCollisionAC(dot.mCollider, wall49)){
+							dot.points+=1;
+							cout<<dot.points;
+							
+							dot.pointsupdated=true;
+							//TASK COMPLETED
+							}
+							
+						case SDLK_2://task2
+							if(!checkCollisionAC(dot.mCollider, wall50)){
+							dot.points+=1;
+							cout<<dot.points;
+							dot.pointsupdated=true;
+							//TASK COMPLETED
+							}
+							else if(!checkCollisionAC(dot.mCollider, wall51)){
+							dot.points+=1;
+							cout<<dot.points;
+							dot.pointsupdated=true;
+							//TASK COMPLETED
+							}
+							
+						case SDLK_3://task3
+							if(!checkCollisionAC(dot.mCollider, wall52)){
+							dot.points+=1;
+							cout<<dot.points;
+							dot.pointsupdated=true;
+							//TASK COMPLETED
+							}
+						case SDLK_4://task4
+							if(!checkCollisionAC(dot.mCollider, wall56)){
+							dot.points-=1;
+							dot.life=5;
+							cout<<dot.points;
+							dot.pointsupdated=true;
+							//TASK COMPLETED
+							}
+							else if(!checkCollisionAC(dot.mCollider, wall57)){
+							dot.points-=1;
+							dot.life=5;
+							cout<<dot.points;
+							dot.pointsupdated=true;
+							//TASK COMPLETED
+							}
+							else if(!checkCollisionAC(dot.mCollider, wall58)){
+							dot.points-=1;
+							dot.life=5;
+							cout<<dot.points;
+							dot.pointsupdated=true;
+							//TASK COMPLETED
+							}
+							else if(!checkCollisionAC(dot.mCollider, wall59)){
+							dot.points-=1;
+							dot.life=5;
+							cout<<dot.points;
+							dot.pointsupdated=true;
+							//TASK COMPLETED
+							}
+						case SDLK_5://task5
+							if(!checkCollisionAC(dot.mCollider, wall53)){
+							dot.points+=1;
+							cout<<dot.points;
+							dot.pointsupdated=true;
+							//TASK COMPLETED
+							}
+						case SDLK_6://task6
+							if(!checkCollisionAC(dot.mCollider, wall61)){
+							dot.points+=1;
+							cout<<dot.points;
+							dot.pointsupdated=true;
+							//TASK COMPLETED
+							}
+							else if(!checkCollisionAC(dot.mCollider, wall60)){
+							dot.points+=1;
+							cout<<dot.points;
+							dot.pointsupdated=true;
+							//TASK COMPLETED
+							}
+							else if(!checkCollisionAC(dot.mCollider, wall62)){
+							dot.points+=1;
+							cout<<dot.points;
+							dot.pointsupdated=true;
+							//TASK COMPLETED
+							}
+						case SDLK_7://task7
+							if(!checkCollisionAC(dot.mCollider, wall54)){
+							dot.points+=1;
+							cout<<dot.points;
+							dot.pointsupdated=true;
+							//TASK COMPLETED
+							}
+						case SDLK_8://task8
+							if(!checkCollisionAC(dot.mCollider, wall55)){
+							dot.points+=1;
+							cout<<dot.points;
+							dot.pointsupdated=true;
+							//TASK COMPLETED
+							}
+							
 							default:
 							gDotTexture = gKeyPressSurfaces[ KEY_PRESS_SURFACE_DEFAULT ];
 							break;
@@ -1289,17 +1595,15 @@ int main( int argc, char* args[] )
 				}
 
 				//Move the dot and check collision
-				SDL_Rect wallarray[48]={wall1, wall2, wall3, wall4, wall5, wall6, wall7, wall8, wall9, wall10, wall11, wall12, wall13, wall14, wall15, wall16, wall17, wall18, wall19, wall20, wall21, wall22, wall23, wall24, wall25, wall26, wall27, wall28, wall29, wall30, wall31, wall32, wall33, wall34, wall35, wall36, wall37, wall38, wall39, wall40, wall41, wall42, wall43, wall44, wall45, wall46, wall47, wall48};
+				SDL_Rect wallarray[63]={wall1, wall2, wall3, wall4, wall5, wall6, wall7, wall8, wall9, wall10, wall11, wall12, wall13, wall14, wall15, wall16, wall17, wall18, wall19, wall20, wall21, wall22, wall23, wall24, wall25, wall26, wall27, wall28, wall29, wall30, wall31, wall32, wall33, wall34, wall35, wall36, wall37, wall38, wall39, wall40, wall41, wall42, wall43, wall44, wall45, wall46, wall47, wall48,wall49,wall50,wall51,wall52,wall53, wall54,wall55 ,wall56, wall57, wall58, wall59, wall60, wall61, wall62, wall63};
 				//dot.move( wall );
 				
-				/*for(int i=0;i<2;i++){
-				dot.move( wallarray ,48,ghostarray[i].ghostCollider );}*/
 				
-				dot.move( wallarray ,48,ghost1.ghostCollider );
+				dot.move( wallarray ,62,ghost1.ghostCollider );
 				
-				ghost1.move(wallarray, 48);
-				ghost2.move(wallarray, 48);
-				ghost3.move(wallarray, 48);
+				ghost1.move(wallarray, 62);
+				ghost2.move(wallarray, 62);
+				ghost3.move(wallarray, 62);
 
 				//Center the camera over the dot
 				camera.x = ( dot.getPosX() + Dot::DOT_WIDTH / 2 ) - SCREEN_WIDTH / 2;
@@ -1365,8 +1669,158 @@ int main( int argc, char* args[] )
 				ghost3.render( camera.x, camera.y,0 );
 				
 				
+				
+				
+				
+				//POINTS
+				if(dot.points){
+				point1.render(SCREEN_WIDTH - 48,4);}
+				if(dot.points>=1){
+				point1.render(SCREEN_WIDTH - 48,4);}
+				if(dot.points>=2){
+				point1.render(SCREEN_WIDTH - 48*2,4);}
+				if(dot.points>=3){
+				point1.render(SCREEN_WIDTH - 48*3,4);}
+				if(dot.points>=4){
+				point1.render(SCREEN_WIDTH - 48*4,4);}
+				if(dot.points>=5){
+				point1.render(SCREEN_WIDTH - 48*5,4);}
+				if(dot.points>=6){
+				point1.render(SCREEN_WIDTH - 48,48);}
+				if(dot.points>=7){
+				point1.render(SCREEN_WIDTH - 48*2,48);}
+				if(dot.points>=8){
+				point1.render(SCREEN_WIDTH - 48*3,48);}
+				if(dot.points>=9){
+				point1.render(SCREEN_WIDTH - 48*4,48);}
+				if(dot.points>=10){
+				point1.render(SCREEN_WIDTH - 48*5,48);
+				lifeT5.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
+				}
+				
+				//TASKS
+				if(!checkCollisionAC(dot.mCollider, wall49)){
+				task1.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
+				}
+				
+				if(!checkCollisionAC(dot.mCollider, wall50)){
+				task2.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
+				}
+				if(!checkCollisionAC(dot.mCollider, wall51)){
+				task2.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
+				}
+				
+				if(!checkCollisionAC(dot.mCollider, wall52)){
+				task3.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
+				}
+				
+				if(!checkCollisionAC(dot.mCollider, wall56)){
+				task41.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
+				}
+				if(!checkCollisionAC(dot.mCollider, wall57)){
+				task43.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
+				}
+				if(!checkCollisionAC(dot.mCollider, wall58)){
+				task44.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
+				}
+				if(!checkCollisionAC(dot.mCollider, wall59)){
+				task42.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
+				}
+				
+				if(!checkCollisionAC(dot.mCollider, wall53)){
+				task5.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
+				}
+				
+				if(!checkCollisionAC(dot.mCollider, wall60)){
+				task63.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
+				}
+				if(!checkCollisionAC(dot.mCollider, wall61)){
+				task62.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
+				}
+				if(!checkCollisionAC(dot.mCollider, wall62)){
+				task61.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
+				}
+				
+				if(!checkCollisionAC(dot.mCollider, wall54)){
+				task7.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
+				}
+				
+				if(!checkCollisionAC(dot.mCollider, wall55)){
+				task8.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
+				}
+				if(!checkCollisionAC(dot.mCollider, wall63)){
+				oops.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
+				}
+				
+				
+				
+				if(dot.pointsupdated){
+				if(!checkCollisionAC(dot.mCollider, wall49)){
+				taskdone.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
+				dot.pointsupdated=false;
+				}
+				if(!checkCollisionAC(dot.mCollider, wall50)){
+				taskdone.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
+				dot.pointsupdated=false;
+				}
+				if(!checkCollisionAC(dot.mCollider, wall51)){
+				taskdone.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
+				dot.pointsupdated=false;
+				}
+				if(!checkCollisionAC(dot.mCollider, wall52)){
+				taskdone.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
+				dot.pointsupdated=false;
+				}
+				if(!checkCollisionAC(dot.mCollider, wall53)){
+				taskdone.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
+				dot.pointsupdated=false;
+				}
+				if(!checkCollisionAC(dot.mCollider, wall54)){
+				taskdone.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
+				dot.pointsupdated=false;
+				}
+				if(!checkCollisionAC(dot.mCollider, wall55)){
+				taskdone.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
+				dot.pointsupdated=false;
+				}
+				if(!checkCollisionAC(dot.mCollider, wall56)){
+				taskdone.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
+				dot.pointsupdated=false;
+				}
+				if(!checkCollisionAC(dot.mCollider, wall57)){
+				taskdone.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
+				dot.pointsupdated=false;
+				}
+				if(!checkCollisionAC(dot.mCollider, wall58)){
+				taskdone.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
+				dot.pointsupdated=false;
+				}
+				if(!checkCollisionAC(dot.mCollider, wall59)){
+				taskdone.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
+				dot.pointsupdated=false;
+				}
+				if(!checkCollisionAC(dot.mCollider, wall60)){
+				taskdone.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
+				dot.pointsupdated=false;
+				}
+				if(!checkCollisionAC(dot.mCollider, wall61)){
+				taskdone.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
+				dot.pointsupdated=false;
+				}
+				if(!checkCollisionAC(dot.mCollider, wall62)){
+				taskdone.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
+				dot.pointsupdated=false;
+				}
+				if(!checkCollisionAC(dot.mCollider, wall63)){
+				taskdone.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
+				dot.pointsupdated=false;
+				}
+				}
+				
 				//Update screen
 				SDL_RenderPresent( gRenderer );
+				
+				
 			}
 		}
 	}
