@@ -378,7 +378,8 @@ int LTexture::getHeight()
 Dot::Dot()
 {
     //Initialize the offsets
-    mPosX = 301*32;
+    //initial position
+    mPosX = 300*32;
     mPosY = 57*32;
     
     //Set collision box dimension
@@ -761,7 +762,7 @@ bool loadMedia()
 		success = false;
 	}
 	
-if( !oops.loadFromFile( "oops.png" ) )
+if( !oops.loadFromFile( "oops(1).png" ) )
 	{
 		printf( "Failed to load background texture!\n" );
 		success = false;
@@ -1081,7 +1082,7 @@ int main( int argc, char* args[] )
 			wall3.y = 26* 32;
 			wall3.w = 2* 32 + 32;
 			wall3.h = 43* 32;
-			
+			//oops
 			SDL_Rect wall4;
 			wall4.x = 22* 32;
 			wall4.y = 57* 32 -32 ;
@@ -1435,9 +1436,9 @@ int main( int argc, char* args[] )
 			wall62.y = 67*32 -32;
 			wall62.w = 10*32 ;
 			wall62.h = 2*32 +32;
-			
+			//oops
 			SDL_Rect wall63;
-			wall63.x = 303* 32;
+			wall63.x = 302* 32;
 			wall63.y = 57* 32 -32 ;
 			wall63.w = 4* 32;
 			wall63.h = 2* 32 + 32;
@@ -1599,11 +1600,11 @@ int main( int argc, char* args[] )
 				//dot.move( wall );
 				
 				
-				dot.move( wallarray ,62,ghost1.ghostCollider );
+				dot.move( wallarray ,63,ghost1.ghostCollider );
 				
-				ghost1.move(wallarray, 62);
-				ghost2.move(wallarray, 62);
-				ghost3.move(wallarray, 62);
+				ghost1.move(wallarray, 63);
+				ghost2.move(wallarray, 63);
+				ghost3.move(wallarray, 63);
 
 				//Center the camera over the dot
 				camera.x = ( dot.getPosX() + Dot::DOT_WIDTH / 2 ) - SCREEN_WIDTH / 2;
@@ -1701,121 +1702,133 @@ int main( int argc, char* args[] )
 				//TASKS
 				if(!checkCollisionAC(dot.mCollider, wall49)){
 				task1.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
-				}
-				
-				if(!checkCollisionAC(dot.mCollider, wall50)){
-				task2.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
-				}
-				if(!checkCollisionAC(dot.mCollider, wall51)){
-				task2.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
-				}
-				
-				if(!checkCollisionAC(dot.mCollider, wall52)){
-				task3.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
-				}
-				
-				if(!checkCollisionAC(dot.mCollider, wall56)){
-				task41.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
-				}
-				if(!checkCollisionAC(dot.mCollider, wall57)){
-				task43.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
-				}
-				if(!checkCollisionAC(dot.mCollider, wall58)){
-				task44.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
-				}
-				if(!checkCollisionAC(dot.mCollider, wall59)){
-				task42.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
-				}
-				
-				if(!checkCollisionAC(dot.mCollider, wall53)){
-				task5.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
-				}
-				
-				if(!checkCollisionAC(dot.mCollider, wall60)){
-				task63.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
-				}
-				if(!checkCollisionAC(dot.mCollider, wall61)){
-				task62.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
-				}
-				if(!checkCollisionAC(dot.mCollider, wall62)){
-				task61.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
-				}
-				
-				if(!checkCollisionAC(dot.mCollider, wall54)){
-				task7.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
-				}
-				
-				if(!checkCollisionAC(dot.mCollider, wall55)){
-				task8.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
-				}
-				if(!checkCollisionAC(dot.mCollider, wall63)){
-				oops.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
-				}
-				
-				
-				
 				if(dot.pointsupdated){
-				if(!checkCollisionAC(dot.mCollider, wall49)){
-				taskdone.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
-				dot.pointsupdated=false;
+				cout<<"wall49 ";
+					taskdone.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
+					//cout<<"wall50done ";
+					}
 				}
-				if(!checkCollisionAC(dot.mCollider, wall50)){
-				taskdone.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
-				dot.pointsupdated=false;
+				
+				else if(!checkCollisionAC(dot.mCollider, wall50)){
+				task2.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
+				if(dot.pointsupdated){
+				cout<<"wall50 ";
+					taskdone.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
+					cout<<"wall50done ";
+					}
 				}
-				if(!checkCollisionAC(dot.mCollider, wall51)){
-				taskdone.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
-				dot.pointsupdated=false;
+				else if(!checkCollisionAC(dot.mCollider, wall51)){
+				task2.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
+				if(dot.pointsupdated){
+				cout<<"wall51 ";
+					taskdone.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
+					//cout<<"wall50done ";
+					}
 				}
-				if(!checkCollisionAC(dot.mCollider, wall52)){
-				taskdone.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
-				dot.pointsupdated=false;
+				
+				else if(!checkCollisionAC(dot.mCollider, wall52)){
+				task3.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
+				if(dot.pointsupdated){
+				cout<<"wall52 ";
+					taskdone.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
+					//cout<<"wall50done ";
+					}
 				}
-				if(!checkCollisionAC(dot.mCollider, wall53)){
-				taskdone.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
-				dot.pointsupdated=false;
+				
+				else if(!checkCollisionAC(dot.mCollider, wall56)){
+				task41.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
+				if(dot.pointsupdated){
+				cout<<"wall56 ";
+					taskdone.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
+					//cout<<"wall50done ";
+					}
 				}
-				if(!checkCollisionAC(dot.mCollider, wall54)){
-				taskdone.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
-				dot.pointsupdated=false;
+				else if(!checkCollisionAC(dot.mCollider, wall57)){
+				task43.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
+				if(dot.pointsupdated){
+				cout<<"wall57 ";
+					taskdone.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
+					//cout<<"wall50done ";
+					}
 				}
-				if(!checkCollisionAC(dot.mCollider, wall55)){
-				taskdone.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
-				dot.pointsupdated=false;
+				else if(!checkCollisionAC(dot.mCollider, wall58)){
+				task44.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
+				if(dot.pointsupdated){
+				cout<<"wall58 ";
+					taskdone.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
+					//cout<<"wall50done ";
+					}
 				}
-				if(!checkCollisionAC(dot.mCollider, wall56)){
-				taskdone.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
-				dot.pointsupdated=false;
+				else if(!checkCollisionAC(dot.mCollider, wall59)){
+				task42.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
+				if(dot.pointsupdated){
+				cout<<"wall59 ";
+					taskdone.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
+					//cout<<"wall50done ";
+					}
 				}
-				if(!checkCollisionAC(dot.mCollider, wall57)){
-				taskdone.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
-				dot.pointsupdated=false;
+				
+				else if(!checkCollisionAC(dot.mCollider, wall53)){
+				task5.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
+				if(dot.pointsupdated){
+				cout<<"wall53 ";
+					taskdone.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
+					//cout<<"wall50done ";
+					}
 				}
-				if(!checkCollisionAC(dot.mCollider, wall58)){
-				taskdone.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
-				dot.pointsupdated=false;
+				
+				else if(!checkCollisionAC(dot.mCollider, wall60)){
+				task63.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
+				if(dot.pointsupdated){
+				cout<<"wall60 ";
+					taskdone.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
+					//cout<<"wall50done ";
+					}
 				}
-				if(!checkCollisionAC(dot.mCollider, wall59)){
-				taskdone.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
-				dot.pointsupdated=false;
+				else if(!checkCollisionAC(dot.mCollider, wall61)){
+				task62.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
+				if(dot.pointsupdated){
+				cout<<"wall61 ";
+					taskdone.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
+					//cout<<"wall50done ";
+					}
+				
 				}
-				if(!checkCollisionAC(dot.mCollider, wall60)){
-				taskdone.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
-				dot.pointsupdated=false;
+				else if(!checkCollisionAC(dot.mCollider, wall62)){
+				task61.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
+				if(dot.pointsupdated){
+				cout<<"wall62 ";
+					taskdone.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
+					//cout<<"wall50done ";
+					}
 				}
-				if(!checkCollisionAC(dot.mCollider, wall61)){
-				taskdone.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
-				dot.pointsupdated=false;
+				
+				else if(!checkCollisionAC(dot.mCollider, wall54)){
+				task7.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
+				if(dot.pointsupdated){
+				cout<<"wall54 ";
+					taskdone.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
+					//cout<<"wall50done ";
+					}
 				}
-				if(!checkCollisionAC(dot.mCollider, wall62)){
-				taskdone.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
-				dot.pointsupdated=false;
+				
+				else if(!checkCollisionAC(dot.mCollider, wall55)){
+				task8.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
+				if(dot.pointsupdated){
+				cout<<"wall55 ";
+					taskdone.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
+					//cout<<"wall50done ";
+					}
 				}
-				if(!checkCollisionAC(dot.mCollider, wall63)){
-				taskdone.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
-				dot.pointsupdated=false;
+				else if(!checkCollisionAC(dot.mCollider, wall63)){
+				oops.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
+				if(dot.pointsupdated){
+				cout<<"wall63 ";
+					taskdone.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
+					
+					}
 				}
-				}
+				else {dot.pointsupdated = false;}
 				
 				//Update screen
 				SDL_RenderPresent( gRenderer );
