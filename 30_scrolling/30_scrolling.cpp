@@ -3,12 +3,15 @@ and may not be redistributed without written permission.*/
 
 //Using SDL, SDL_image, standard IO, vectors, and strings
 #include<SDL2/SDL.h>
-//#include <SDL.h>
 #include<SDL2/SDL_image.h>
-//#include <SDL_image.h>
 #include <stdio.h>
 #include <string>
 #include <iostream>
+#include <netinet/in.h>
+#include <stdlib.h>
+#include <sys/socket.h>
+#include <unistd.h>
+#define PORT 8080
 using namespace std;
 
 //The dimensions of the level
@@ -66,6 +69,7 @@ class LTexture
 		int getWidth();
 		int getHeight();
 
+        bool isdone=false;
 	private:
 		//The actual hardware texture
 		SDL_Texture* mTexture;
@@ -218,6 +222,7 @@ LTexture lifeT4;
 LTexture lifeT5;
 LTexture task1;
 LTexture task2;
+LTexture task22;
 LTexture task3;
 LTexture task41;
 
@@ -676,7 +681,7 @@ bool loadMedia()
 	
 	
 
-	if( !gPauseTexture.loadFromFile( "Pause.png" ) )
+	if( !gPauseTexture.loadFromFile( "pics/Pause.png" ) )
 	{
 		printf( "Failed to load front pause texture!\n" );
 		success = false;
@@ -687,7 +692,7 @@ bool loadMedia()
 		gPauseTexture.setBlendMode( SDL_BLENDMODE_BLEND );
 	}
 
-	if( !gStartTexture.loadFromFile( "Start.png" ) )
+	if( !gStartTexture.loadFromFile( "pics/Start.png" ) )
 	{
 		printf( "Failed to load front start texture!\n" );
 		success = false;
@@ -698,135 +703,141 @@ bool loadMedia()
 		gStartTexture.setBlendMode( SDL_BLENDMODE_BLEND );
 	}
 	
-	gKeyPressSurfaces[ KEY_PRESS_SURFACE_RIGHT ].loadFromFile( "phinright.png" );
-	gKeyPressSurfaces[ KEY_PRESS_SURFACE_LEFT ].loadFromFile( "phinleft.png");
-	gKeyPressSurfaces[ KEY_PRESS_SURFACE_UP ].loadFromFile( "phinleft.png");
-	gKeyPressSurfaces[ KEY_PRESS_SURFACE_DOWN ].loadFromFile( "phinleft.png");
-	gKeyPressSurfaces[ KEY_PRESS_SURFACE_DEFAULT ].loadFromFile( "phinleft.png");
+	gKeyPressSurfaces[ KEY_PRESS_SURFACE_RIGHT ].loadFromFile( "pics/phinright.png" );
+	gKeyPressSurfaces[ KEY_PRESS_SURFACE_LEFT ].loadFromFile( "pics/phinleft.png");
+	gKeyPressSurfaces[ KEY_PRESS_SURFACE_UP ].loadFromFile( "pics/phinleft.png");
+	gKeyPressSurfaces[ KEY_PRESS_SURFACE_DOWN ].loadFromFile( "pics/phinleft.png");
+	gKeyPressSurfaces[ KEY_PRESS_SURFACE_DEFAULT ].loadFromFile( "pics/phinleft.png");
 	
 	//Load ghost texture1
-	if( !ghostTexture1.loadFromFile( "doc.png" ) )
+	if( !ghostTexture1.loadFromFile( "pics/doc.png" ) )
 	{
 		printf( "Failed to load doc texture!\n" );
 		success = false;
 	}
 	
 	//Load ghost texture2
-	if( !ghostTexture2.loadFromFile( "dog(2).png" ) )
+	if( !ghostTexture2.loadFromFile( "pics/dog(2).png" ) )
 	{
 		printf( "Failed to load dog texture!\n" );
 		success = false;
 	}
 
 	//Load background texture
-	if( !gBGTexture.loadFromFile( "map.png" ) )
+	if( !gBGTexture.loadFromFile( "pics/map.png" ) )
 	{
 		printf( "Failed to load background texture!\n" );
 		success = false;
 	}
-	if( !lifeT1.loadFromFile( "1.png" ) )
+	if( !lifeT1.loadFromFile( "pics/1.png" ) )
 	{
 		printf( "Failed to load background texture!\n" );
 		success = false;
 	}
-	if( !lifeT2.loadFromFile( "2.png" ) )
+	if( !lifeT2.loadFromFile( "pics/2.png" ) )
 	{
 		printf( "Failed to load background texture!\n" );
 		success = false;
 	}
-	if( !lifeT3.loadFromFile( "3.png" ) )
+	if( !lifeT3.loadFromFile( "pics/3.png" ) )
 	{
 		printf( "Failed to load background texture!\n" );
 		success = false;
 	}
-	if( !lifeT4.loadFromFile( "4.png" ) )
+	if( !lifeT4.loadFromFile( "pics/4.png" ) )
 	{
 		printf( "Failed to load background texture!\n" );
 		success = false;
 	}
-	if( !lifeT5.loadFromFile( "5.png" ) )
+	if( !lifeT5.loadFromFile( "pics/5.png" ) )
 	{
 		printf( "Failed to load background texture!\n" );
 		success = false;
 	}
-	if( !task1.loadFromFile( "task1.png" ) )
+	if( !task1.loadFromFile( "pics/task1.png" ) )
 	{
 		printf( "Failed to load background texture!\n" );
 		success = false;
 	}
-	if( !task2.loadFromFile( "task2.png" ) )
+	if( !task2.loadFromFile( "pics/task2.png" ) )
 	{
 		printf( "Failed to load background texture!\n" );
 		success = false;
 	}
-	if( !task3.loadFromFile( "task3.png" ) )
+    if( !task22.loadFromFile( "pics/task2.png" ) )
 	{
 		printf( "Failed to load background texture!\n" );
 		success = false;
 	}
-	if( !task41.loadFromFile( "task4.1.png" ) )
+    
+	if( !task3.loadFromFile( "pics/task3.png" ) )
 	{
 		printf( "Failed to load background texture!\n" );
 		success = false;
 	}
-	if( !task42.loadFromFile( "task4.2.png" ) )
+	if( !task41.loadFromFile( "pics/task4.1.png" ) )
 	{
 		printf( "Failed to load background texture!\n" );
 		success = false;
 	}
-	if( !task43.loadFromFile( "task4.3.png" ) )
+	if( !task42.loadFromFile( "pics/task4.2.png" ) )
 	{
 		printf( "Failed to load background texture!\n" );
 		success = false;
 	}
-	if( !task44.loadFromFile( "task4.4.png" ) )
+	if( !task43.loadFromFile( "pics/task4.3.png" ) )
 	{
 		printf( "Failed to load background texture!\n" );
 		success = false;
 	}
-	if( !task5.loadFromFile( "task5.png" ) )
+	if( !task44.loadFromFile( "pics/task4.4.png" ) )
 	{
 		printf( "Failed to load background texture!\n" );
 		success = false;
 	}
-	if( !task61.loadFromFile( "task6.png" ) )
+	if( !task5.loadFromFile( "pics/task5.png" ) )
 	{
 		printf( "Failed to load background texture!\n" );
 		success = false;
 	}
-	if( !task62.loadFromFile( "task6.2.png" ) )
+	if( !task61.loadFromFile( "pics/task6.png" ) )
 	{
 		printf( "Failed to load background texture!\n" );
 		success = false;
 	}
-	if( !task63.loadFromFile( "task6.3.png" ) )
+	if( !task62.loadFromFile( "pics/task6.2.png" ) )
 	{
 		printf( "Failed to load background texture!\n" );
 		success = false;
 	}
-	if( !task7.loadFromFile( "task7.png" ) )
+	if( !task63.loadFromFile( "pics/task6.3.png" ) )
 	{
 		printf( "Failed to load background texture!\n" );
 		success = false;
 	}
-	if( !task8.loadFromFile( "task8.png" ) )
+	if( !task7.loadFromFile( "pics/task7.png" ) )
 	{
 		printf( "Failed to load background texture!\n" );
 		success = false;
 	}
-	
-	if( !taskdone.loadFromFile( "taskdone.png" ) )
-	{
-		printf( "Failed to load background texture!\n" );
-		success = false;
-	}
-	if( !point1.loadFromFile( "coin(1).png" ) )
+	if( !task8.loadFromFile( "pics/task8.png" ) )
 	{
 		printf( "Failed to load background texture!\n" );
 		success = false;
 	}
 	
-if( !oops.loadFromFile( "oops.png" ) )
+	if( !taskdone.loadFromFile( "pics/taskdone.png" ) )
+	{
+		printf( "Failed to load background texture!\n" );
+		success = false;
+	}
+	if( !point1.loadFromFile( "pics/coin(1).png" ) )
+	{
+		printf( "Failed to load background texture!\n" );
+		success = false;
+	}
+	
+if( !oops.loadFromFile( "pics/oops.png" ) )
 	{
 		printf( "Failed to load background texture!\n" );
 		success = false;
@@ -851,6 +862,8 @@ void close()
 	lifeT5.free();
 	task1.free();
 	task2.free();
+	task22.free();
+    
 	task3.free();
 	task41.free();
 	task42.free();
@@ -1100,6 +1113,53 @@ bool checkCollisionAC( SDL_Rect a, SDL_Rect b )
 
 int main( int argc, char* args[] )
 {
+
+//     int server_fd, new_socket, valread;
+//     struct sockaddr_in address;
+//     int opt = 1;
+//     int addrlen = sizeof(address);
+//     char buffer[1024] = { 0 };
+//     char* hello = "Hello from server";
+ 
+//     // Creating socket file descriptor
+//     if ((server_fd = socket(AF_INET, SOCK_STREAM, 0))
+//         == 0) {
+//         perror("socket failed");
+//         exit(EXIT_FAILURE);
+//     }
+ 
+//     // Forcefully attaching socket to the port 8080 
+// if (setsockopt(server_fd, SOL_SOCKET, SO_REUSEADDR , &opt, sizeof(opt))) {
+//         perror("setsockopt");
+//         exit(EXIT_FAILURE);
+//     }
+//     address.sin_family = AF_INET;
+//     address.sin_addr.s_addr = INADDR_ANY;
+//     address.sin_port = htons(PORT);
+ 
+//     // Forcefully attaching socket to the port 8080
+//     if (bind(server_fd, (struct sockaddr*)&address,
+//              sizeof(address))
+//         < 0) {
+//         perror("bind failed");
+//         exit(EXIT_FAILURE);
+//     }
+//     if (listen(server_fd, 3) < 0) {
+//         perror("listen");
+//         exit(EXIT_FAILURE);
+//     }
+//     if ((new_socket
+//          = accept(server_fd, (struct sockaddr*)&address,
+//                   (socklen_t*)&addrlen))
+//         < 0) {
+//         perror("accept");
+//         exit(EXIT_FAILURE);
+//     }
+//     valread = read(new_socket, buffer, 1024);
+//     printf("%s\n", buffer);
+//     send(new_socket, hello, strlen(hello), 0);
+//     printf("Hello message sent\n");
+
 	//Start up SDL and create window
 	if( !init() )
 	{
@@ -1535,7 +1595,7 @@ int main( int argc, char* args[] )
 					else if( e.type == SDL_KEYDOWN )
 					{
 					
-					if( e.key.keysym.sym == SDLK_p )
+					if( e.key.keysym.sym == SDLK_RETURN )
 						{
 						b=0;
 						flag =1;
@@ -1575,9 +1635,10 @@ int main( int argc, char* args[] )
 						//task1
 							if(!checkCollisionAC(dot.mCollider, wall49)){
 							dot.points+=1;
-							cout<<dot.points;
+							//cout<<dot.points;
 							
 							dot.pointsupdated=true;
+                            task1.isdone=true;
 							//TASK COMPLETED
 							}
 						}
@@ -1586,14 +1647,17 @@ int main( int argc, char* args[] )
 						//task2
 							if(!checkCollisionAC(dot.mCollider, wall50)){
 							dot.points+=1;
-							cout<<dot.points;
+							//cout<<dot.points;
 							dot.pointsupdated=true;
+                            task2.isdone=true;
 							//TASK COMPLETED
 							}
 							else if(!checkCollisionAC(dot.mCollider, wall51)){
 							dot.points+=1;
-							cout<<dot.points;
+							//cout<<dot.points;
 							dot.pointsupdated=true;
+                            task22.isdone=true;
+
 							//TASK COMPLETED
 							}
 						}	
@@ -1602,8 +1666,9 @@ int main( int argc, char* args[] )
 						//task3
 							if(!checkCollisionAC(dot.mCollider, wall52)){
 							dot.points+=1;
-							cout<<dot.points;
+							//cout<<dot.points;
 							dot.pointsupdated=true;
+                            task3.isdone=true;
 							//TASK COMPLETED
 							}
 						}
@@ -1613,29 +1678,34 @@ int main( int argc, char* args[] )
 							if(!checkCollisionAC(dot.mCollider, wall56)){
 							dot.points-=1;
 							dot.life=5;
-							cout<<dot.points;
+							//cout<<dot.points;
 							dot.pointsupdated=true;
+                            task41.isdone=true;
 							//TASK COMPLETED
 							}
 							else if(!checkCollisionAC(dot.mCollider, wall57)){
 							dot.points-=1;
 							dot.life=5;
-							cout<<dot.points;
+							//cout<<dot.points;
 							dot.pointsupdated=true;
+                            
+                            task42.isdone=true;
 							//TASK COMPLETED
 							}
 							else if(!checkCollisionAC(dot.mCollider, wall58)){
 							dot.points-=1;
 							dot.life=5;
-							cout<<dot.points;
+							//cout<<dot.points;
 							dot.pointsupdated=true;
+                            task43.isdone=true;
 							//TASK COMPLETED
 							}
 							else if(!checkCollisionAC(dot.mCollider, wall59)){
 							dot.points-=1;
 							dot.life=5;
-							cout<<dot.points;
+							//cout<<dot.points;
 							dot.pointsupdated=true;
+                            task44.isdone=true;
 							//TASK COMPLETED
 							}
 						}
@@ -1644,8 +1714,9 @@ int main( int argc, char* args[] )
 						//task5
 							if(!checkCollisionAC(dot.mCollider, wall53)){
 							dot.points+=1;
-							cout<<dot.points;
+							//cout<<dot.points;
 							dot.pointsupdated=true;
+                            task5.isdone=true;
 							//TASK COMPLETED
 							}
 						}
@@ -1654,20 +1725,23 @@ int main( int argc, char* args[] )
 						//task6
 							if(!checkCollisionAC(dot.mCollider, wall61)){
 							dot.points+=1;
-							cout<<dot.points;
+							//cout<<dot.points;
 							dot.pointsupdated=true;
+                            task61.isdone=true;
 							//TASK COMPLETED
 							}
 							else if(!checkCollisionAC(dot.mCollider, wall60)){
 							dot.points+=1;
-							cout<<dot.points;
+							//cout<<dot.points;
 							dot.pointsupdated=true;
+                            task62.isdone=true;
 							//TASK COMPLETED
 							}
 							else if(!checkCollisionAC(dot.mCollider, wall62)){
 							dot.points+=1;
-							cout<<dot.points;
+							//cout<<dot.points;
 							dot.pointsupdated=true;
+                            task63.isdone=true;
 							//TASK COMPLETED
 							}
 						}
@@ -1676,8 +1750,9 @@ int main( int argc, char* args[] )
 						//task7
 							if(!checkCollisionAC(dot.mCollider, wall54)){
 							dot.points+=1;
-							cout<<dot.points;
+							//cout<<dot.points;
 							dot.pointsupdated=true;
+                            task7.isdone=true;
 							//TASK COMPLETED
 							}
 						}
@@ -1687,8 +1762,9 @@ int main( int argc, char* args[] )
 						//task8
 							if(!checkCollisionAC(dot.mCollider, wall55)){
 							dot.points+=1;
-							cout<<dot.points;
+							//cout<<dot.points;
 							dot.pointsupdated=true;
+                            task8.isdone=true;
 							//TASK COMPLETED
 							}
 						}
@@ -1709,7 +1785,8 @@ int main( int argc, char* args[] )
 
 				//Move the dot and check collision
 				SDL_Rect wallarray[63]={wall1, wall2, wall3, wall4, wall5, wall6, wall7, wall8, wall9, wall10, wall11, wall12, wall13, wall14, wall15, wall16, wall17, wall18, wall19, wall20, wall21, wall22, wall23, wall24, wall25, wall26, wall27, wall28, wall29, wall30, wall31, wall32, wall33, wall34, wall35, wall36, wall37, wall38, wall39, wall40, wall41, wall42, wall43, wall44, wall45, wall46, wall47, wall48,wall49,wall50,wall51,wall52,wall53, wall54,wall55 ,wall56, wall57, wall58, wall59, wall60, wall61, wall62, wall63};
-				//dot.move( wall );
+				int walltaskdone[63]={0};
+                //dot.move( wall );
 				
 				/*for(int i=0;i<2;i++){
 				dot.move( wallarray ,48,ghostarray[i].ghostCollider );}*/
@@ -1757,7 +1834,7 @@ int main( int argc, char* args[] )
 				
 				if(!(checkCollisionlife(dot.mCollider,ghostColliderarray,2)) ){
 				if(dot.manshi){
-				cout<<dot.life<<" ";
+				//cout<<dot.life<<" ";
 				dot.life-=1;
 				dot.manshi = false;
 				}}
@@ -1816,128 +1893,128 @@ int main( int argc, char* args[] )
 				//TASKS
 				if(!checkCollisionAC(dot.mCollider, wall49)){
 				task1.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
-				if(dot.pointsupdated){
-				cout<<"wall49 ";
+				if(dot.pointsupdated or task1.isdone ){
+				//cout<<"wall49 ";
 					taskdone.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
-					//cout<<"wall50done ";
+					////cout<<"wall50done ";
 					}
 				}
 				
 				else if(!checkCollisionAC(dot.mCollider, wall50)){
 				task2.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
-				if(dot.pointsupdated){
-				cout<<"wall50 ";
+				if(dot.pointsupdated  or task2.isdone ){
+				//cout<<"wall50 ";
 					taskdone.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
-					cout<<"wall50done ";
+					//cout<<"wall50done ";
 					}
 				}
 				else if(!checkCollisionAC(dot.mCollider, wall51)){
-				task2.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
-				if(dot.pointsupdated){
-				cout<<"wall51 ";
+				task22.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
+				if(dot.pointsupdated or task22.isdone ){
+				//cout<<"wall51 ";
 					taskdone.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
-					//cout<<"wall50done ";
+					////cout<<"wall50done ";
 					}
 				}
 				
 				else if(!checkCollisionAC(dot.mCollider, wall52)){
 				task3.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
-				if(dot.pointsupdated){
-				cout<<"wall52 ";
+				if(dot.pointsupdated or task3.isdone ){
+				//cout<<"wall52 ";
 					taskdone.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
-					//cout<<"wall50done ";
+					////cout<<"wall50done ";
 					}
 				}
 				
 				else if(!checkCollisionAC(dot.mCollider, wall56)){
 				task41.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
-				if(dot.pointsupdated){
-				cout<<"wall56 ";
+				if(dot.pointsupdated or task41.isdone ){
+				//cout<<"wall56 ";
 					taskdone.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
-					//cout<<"wall50done ";
+					////cout<<"wall50done ";
 					}
 				}
 				else if(!checkCollisionAC(dot.mCollider, wall57)){
 				task43.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
-				if(dot.pointsupdated){
-				cout<<"wall57 ";
+				if(dot.pointsupdated or task43.isdone ){
+				//cout<<"wall57 ";
 					taskdone.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
-					//cout<<"wall50done ";
+					////cout<<"wall50done ";
 					}
 				}
 				else if(!checkCollisionAC(dot.mCollider, wall58)){
 				task44.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
-				if(dot.pointsupdated){
-				cout<<"wall58 ";
+				if(dot.pointsupdated or task44.isdone ){
+				//cout<<"wall58 ";
 					taskdone.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
-					//cout<<"wall50done ";
+					////cout<<"wall50done ";
 					}
 				}
 				else if(!checkCollisionAC(dot.mCollider, wall59)){
 				task42.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
-				if(dot.pointsupdated){
-				cout<<"wall59 ";
+				if(dot.pointsupdated or task42.isdone ){
+				//cout<<"wall59 ";
 					taskdone.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
-					//cout<<"wall50done ";
+					////cout<<"wall50done ";
 					}
 				}
 				
 				else if(!checkCollisionAC(dot.mCollider, wall53)){
 				task5.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
-				if(dot.pointsupdated){
-				cout<<"wall53 ";
+				if(dot.pointsupdated or task5.isdone ){
+				//cout<<"wall53 ";
 					taskdone.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
-					//cout<<"wall50done ";
+					////cout<<"wall50done ";
 					}
 				}
 				
 				else if(!checkCollisionAC(dot.mCollider, wall60)){
 				task63.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
-				if(dot.pointsupdated){
-				cout<<"wall60 ";
+				if(dot.pointsupdated or task63.isdone ){
+				//cout<<"wall60 ";
 					taskdone.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
-					//cout<<"wall50done ";
+					////cout<<"wall50done ";
 					}
 				}
 				else if(!checkCollisionAC(dot.mCollider, wall61)){
 				task62.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
-				if(dot.pointsupdated){
-				cout<<"wall61 ";
+				if(dot.pointsupdated or task62.isdone ){
+				//cout<<"wall61 ";
 					taskdone.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
-					//cout<<"wall50done ";
+					////cout<<"wall50done ";
 					}
 				
 				}
 				else if(!checkCollisionAC(dot.mCollider, wall62)){
 				task61.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
-				if(dot.pointsupdated){
-				cout<<"wall62 ";
+				if(dot.pointsupdated or task61.isdone ){
+				//cout<<"wall62 ";
 					taskdone.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
-					//cout<<"wall50done ";
+					////cout<<"wall50done ";
 					}
 				}
 				
 				else if(!checkCollisionAC(dot.mCollider, wall54)){
 				task7.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
-				if(dot.pointsupdated){
-				cout<<"wall54 ";
+				if(dot.pointsupdated or task7.isdone ){
+				//cout<<"wall54 ";
 					taskdone.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
-					//cout<<"wall50done ";
+					////cout<<"wall50done ";
 					}
 				}
 				
 				else if(!checkCollisionAC(dot.mCollider, wall55)){
 				task8.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
-				if(dot.pointsupdated){
-				cout<<"wall55 ";
+				if(dot.pointsupdated or task8.isdone ){
+				//cout<<"wall55 ";
 					taskdone.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
-					//cout<<"wall50done ";
+					////cout<<"wall50done ";
 					}
 				}
 				else if(!checkCollisionAC(dot.mCollider, wall63)){
 				oops.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
 				if(dot.pointsupdated){
-				cout<<"wall63 ";
+				//cout<<"wall63 ";
 					taskdone.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
 					
 					}
