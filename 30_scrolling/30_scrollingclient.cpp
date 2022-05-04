@@ -1112,11 +1112,11 @@ bool checkCollisionAC( SDL_Rect a, SDL_Rect b )
 
 int main( int argc, char* args[] )
 {
-int counter =0;
-int sock = 0, valread;
+    int counter =0;
+    int sock = 0, valread;
     struct sockaddr_in serv_addr;
-    char* hello = "hello from client" ;
-    char buffer[1024] = { 0 };
+    // char* hello = "hello from client" ;
+    // char buffer[1024] = { 0 };
     
     if ((sock = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
         printf("\n Socket creation error \n");
@@ -1128,7 +1128,7 @@ int sock = 0, valread;
  
     // Convert IPv4 and IPv6 addresses from text to binary
     // form
-    if (inet_pton(AF_INET, "10.194.52.202", &serv_addr.sin_addr)
+    if (inet_pton(AF_INET, "10.194.30.228", &serv_addr.sin_addr)
         <= 0) {
         printf(
             "\nInvalid address/ Address not supported \n");
@@ -1141,11 +1141,6 @@ int sock = 0, valread;
         printf("\nConnection Failed \n");
         return -1;
     }
-    send(sock, hello, strlen(hello), 0);
-    printf("Hello message sent\n");
-    valread = read(sock, buffer, 1024);
-    printf("%s\n", buffer);
-    
     
 	//Start up SDL and create window
 	if( !init() )
@@ -1747,65 +1742,12 @@ int sock = 0, valread;
 						
 					}
 				if(flag==1){
-				
-				
-	/*		string count =""+ counter;
-    char* hello3 =  const_cast<char*>(count.c_str());
-    
-    send(sock, hello3, strlen(hello3), 0);
-    printf("Counter message sent\n");	
-cout<< "counter:" << counter<< endl;								
-if(counter%2 ==0) {		
-    string ss =to_string (dot.getPosX()) + "," + to_string (dot.getPosY()) + "hello from client";
-    char* hello2 =  const_cast<char*>(ss.c_str());
-    
-    send(sock, hello2, strlen(hello2), 0);
-    printf("Hello2 message sent\n");
-    }
-    else{
-    char buffer2[1024] = { 0 };
-    valread = read(sock, buffer2, 1024);
-    printf("%s\n", buffer2);
-    
-	}	
-	counter++;		
-				*/
-				
 					//Handle input for the dot
-					
-					//char* hello2 = const_cast<char*>(ss.c_str());
-					//char* hello = "hello from client" ;
 					dot.handleEvent( e );
 					ghost1.handleEvent( e);
 					ghost2.handleEvent( e);
 					ghost3.handleEvent( e);
-					//send(sock, hello2, strlen(hello2), 0);
-    					//printf("Hello2 message sent\n");
-    					
-    					if(counter%2==1){
-				string ss =to_string (dot.getPosX()) + "," + to_string (dot.getPosY()) + "hello from client";
-				char* hello2 =  const_cast<char*>(ss.c_str());
-				    
-				send(sock, hello2, strlen(hello2), 0);
-				printf("seding coordinates from client: \n");
-				}
-else{				
-	char buffer2[1024] = { 0 };
-    	valread = read(sock, buffer2, 1024);
-    	//printf("%s\n", buffer2);
-    	string strr(buffer2);
-	int index = strr.find(',');
-	string str1= strr.substr(0, index);
-	string str2 =strr.substr(index+1 ,strr.length() - index);
-	ind1 = stoi(str1);
-	ind2 = stoi(str2);
-	cout<< "ind1 :"<< ind1 << endl;
-	cout<< "ind2 :"<< ind2<< endl;
-			}
-    	cout<< "counter: "<<counter<< endl;
-
-    	counter++;
-    					
+			
 					}
 				}
 
@@ -1844,6 +1786,25 @@ else{
 					camera.y = LEVEL_HEIGHT - camera.h;
 				}
 
+				string ss =to_string (dot.getPosX()) + "," + to_string (dot.getPosY());
+				char* hello2 =  const_cast<char*>(ss.c_str());
+				    
+				send(sock, hello2, strlen(hello2), 0);
+				printf("seding coordinates from client: \n");
+
+                char buffer2[1024] = { 0 };
+                valread = read(sock, buffer2, 1024);
+                //printf("%s\n", buffer2);
+                string strr=buffer2;
+                int index = strr.find(',');
+                string str1= strr.substr(0, index);
+                string str2 =strr.substr(index+1 ,strr.length()-1-index);
+                ind1 = stoi(str1);
+                ind2 = stoi(str2);
+                cout<< "ind1 :"<< ind1 << endl;
+                cout<< "ind2 :"<< ind2<< endl;
+
+                
 				//Clear screen
 				SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF );
 				SDL_RenderClear( gRenderer );
