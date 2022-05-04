@@ -1116,7 +1116,7 @@ int main( int argc, char* args[] )
     struct sockaddr_in address;
     int opt = 1;
     int addrlen = sizeof(address);
-    char buffer[1024] = { 0 };
+    //char buffer[1024] = { 0 };
     char* hello = "Hello from server";
  
     // Creating socket file descriptor
@@ -1153,10 +1153,8 @@ if (setsockopt(server_fd, SOL_SOCKET, SO_REUSEADDR , &opt, sizeof(opt))) {
         perror("accept");
         exit(EXIT_FAILURE);
     }
-    valread = read(new_socket, buffer, 1024);
-    printf("%s\n", buffer);
-    send(new_socket, hello, strlen(hello), 0);
-    printf("Hello message sent\n");
+    
+    
 
 	//Start up SDL and create window
 	if( !init() )
@@ -1759,36 +1757,15 @@ if (setsockopt(server_fd, SOL_SOCKET, SO_REUSEADDR , &opt, sizeof(opt))) {
 					}
 
 
-			if(flag==1){
+		if(flag==1){
 
-//Handle input for the dot
+		//Handle input for the dot
 					dot.handleEvent( e );
 					ghost1.handleEvent( e);
 					ghost2.handleEvent( e);
 					ghost3.handleEvent( e);
-if(counter%2==1){				
-	char buffer2[1024] = { 0 };
-    	valread = read(new_socket, buffer2, 1024);
-    	//printf("%s\n", buffer2);
-    	string strr(buffer2);
-	int index = strr.find(',');
-	string str1= strr.substr(0, index);
-	string str2 =strr.substr(index+1 ,strr.length() - index);
-	ind1 = stoi(str1);
-	ind2 = stoi(str2);
-	cout<< "ind1 :"<< ind1 << endl;
-	cout<< "ind2 :"<< ind2<< endl;
 			
-}
-else{
-					string ss = to_string(dot.getPosX())+","+ to_string(dot.getPosY())+"Hello2 from server=manshi";
-					char* hello2 = const_cast<char*>(ss.c_str());
-
-					send(new_socket, hello2, strlen(hello2), 0);
-					printf("sending coordinates from server: \n");
-}
-counter++;
-cout<<counter<<" :counter"<<endl;
+					
 					}
 				
 			}
@@ -1826,6 +1803,24 @@ cout<<counter<<" :counter"<<endl;
 				{
 					camera.y = LEVEL_HEIGHT - camera.h;
 				}
+				
+				
+				char buffer2[1024] = { 0 };
+				    	valread = read(new_socket, buffer2, 1024);
+				    	//printf("%s\n", buffer2);
+				    	string strr=buffer2;
+					int index = strr.find(',');
+					string str1= strr.substr(0, index);
+					string str2 =strr.substr(index+1 ,strr.length() - index-1);
+					ind1 = stoi(str1);
+					ind2 = stoi(str2);
+					cout<< "ind1 :"<< ind1 << endl;
+					cout<< "ind2 :"<< ind2<< endl;
+
+								string ss = to_string(dot.getPosX())+","+ to_string(dot.getPosY());
+								char* hello2 = const_cast<char*>(ss.c_str());
+
+					send(new_socket, hello2, strlen(hello2), 0);
 
 				//Clear screen
 				SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF );
