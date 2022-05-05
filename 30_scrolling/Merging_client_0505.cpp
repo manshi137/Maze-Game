@@ -22,8 +22,8 @@ const int LEVEL_WIDTH = 9952;
 const int LEVEL_HEIGHT = 3936;
 
 //Screen dimension constants
-const int SCREEN_WIDTH = 1024;
-const int SCREEN_HEIGHT = 960;
+const int SCREEN_WIDTH = 1920;
+const int SCREEN_HEIGHT = 950;
 
 //Key press surfaces constants
 enum KeyPressSurfaces
@@ -225,6 +225,7 @@ LTexture gPauseTexture;
 LTexture gStartTexture;
 LTexture gMapWindowTexture;
 LTexture gInstrWindowTexture;
+LTexture gStopTexture;
 LTexture oops;
 LTexture nocoins;
 LTexture win;
@@ -831,12 +832,23 @@ bool loadMedia()
 		//Set standard alpha blending
 		gStartTexture.setBlendMode( SDL_BLENDMODE_BLEND );
 	}
+	if( !gStopTexture.loadFromFile( "pics/Stop.png" ) )
+	{
+		printf( "Failed to load front pause texture!\n" );
+		success = false;
+	}
+	else
+	{
+		//Set standard alpha blending
+		gStopTexture.setBlendMode( SDL_BLENDMODE_BLEND );
+	}
+
 	
-	gKeyPressSurfaces[ KEY_PRESS_SURFACE_RIGHT ].loadFromFile( "pics/phinright.png" );
-	gKeyPressSurfaces[ KEY_PRESS_SURFACE_LEFT ].loadFromFile( "pics/phinleft.png");
-	gKeyPressSurfaces[ KEY_PRESS_SURFACE_UP ].loadFromFile( "pics/phinleft.png");
-	gKeyPressSurfaces[ KEY_PRESS_SURFACE_DOWN ].loadFromFile( "pics/phinleft.png");
-	gKeyPressSurfaces[ KEY_PRESS_SURFACE_DEFAULT ].loadFromFile( "pics/phinleft.png");
+	gKeyPressSurfaces[ KEY_PRESS_SURFACE_RIGHT ].loadFromFile( "pics/ferbright.png" );
+	gKeyPressSurfaces[ KEY_PRESS_SURFACE_LEFT ].loadFromFile( "pics/ferbleft.png");
+	gKeyPressSurfaces[ KEY_PRESS_SURFACE_UP ].loadFromFile( "pics/ferbleft.png");
+	gKeyPressSurfaces[ KEY_PRESS_SURFACE_DOWN ].loadFromFile( "pics/ferbleft.png");
+	gKeyPressSurfaces[ KEY_PRESS_SURFACE_DEFAULT ].loadFromFile( "pics/ferbleft.png");
 	
 	//Load ghost texture1
 	if( !ghostTexture1.loadFromFile( "pics/doc.png" ) )
@@ -1008,6 +1020,7 @@ void close()
 	gInstrWindowTexture.free();
 	gPauseTexture.free();
 	gStartTexture.free();
+	gStopTexture.free();
 	lifeT1.free();
 	lifeT2.free();
 	lifeT3.free();
@@ -1284,7 +1297,7 @@ bool checkCollisionAC( SDL_Rect a, SDL_Rect b )
 
 int main( int argc, char* args[] )
 {	//sockets start
-    int counter =0;
+ /*   int counter =0;
     int sock = 0, valread;
     struct sockaddr_in serv_addr;
     
@@ -1308,7 +1321,7 @@ int main( int argc, char* args[] )
         < 0) {
         printf("\nConnection Failed \n");
         return -1;
-    }
+    }*/
     //sockets end
 
 
@@ -1337,6 +1350,7 @@ int main( int argc, char* args[] )
 			Uint8 b = 255;
 			Uint8 c = 0;
 			Uint8 d = 0;
+			Uint8 ee = 0;
 
 
 			//The dot that will be moving around on the screen
@@ -2018,7 +2032,7 @@ int main( int argc, char* args[] )
 				}
 
 				//sockets start
-				string ss = "POINTS="+to_string(dot.points)+"." +to_string(dot.getPosX())+","+ to_string(dot.getPosY());
+			/*	string ss = "POINTS="+to_string(dot.points)+"." +to_string(dot.getPosX())+","+ to_string(dot.getPosY());
 
 				char* hello2 =  const_cast<char*>(ss.c_str());
 				    
@@ -2041,7 +2055,7 @@ int main( int argc, char* args[] )
                 ind1 = stoi(str1);
                 ind2 = stoi(str2);
                 cout<< "ind1 :"<< ind1 << endl;
-                cout<< "ind2 :"<< ind2<< endl;
+                cout<< "ind2 :"<< ind2<< endl; */
 				//sockets end
 				
 				//Clear screen
@@ -2088,6 +2102,7 @@ int main( int argc, char* args[] )
 				lifeT1.render( 0,0);
 				if(alpha==0) {
 				Mix_PlayChannel( -1, gMedium, 0 );
+				ee= 255;
 				alpha++;
 				}
 				}
@@ -2096,6 +2111,7 @@ int main( int argc, char* args[] )
 				gStartTexture.setAlpha( b);
 				gMapWindowTexture.setAlpha(c);
 				gInstrWindowTexture.setAlpha(d);
+				gStopTexture.setAlpha(ee);
 				
 
 				//Render objects
@@ -2285,6 +2301,7 @@ int main( int argc, char* args[] )
 				gPauseTexture.render( 0, 0 );
 				gStartTexture.render(0, 0);
 				gInstrWindowTexture.render(0,0);
+				gStopTexture.render(0,0);
 				//Update screen
 				SDL_RenderPresent( gRenderer );
 				//if(dot.pointsupdated){cout<<dot.points<<" ";}
@@ -2297,4 +2314,3 @@ int main( int argc, char* args[] )
 
 	return 0;
 }
-
