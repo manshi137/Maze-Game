@@ -24,8 +24,8 @@ const int LEVEL_WIDTH = 9952;
 const int LEVEL_HEIGHT = 3936;
 
 //Screen dimension constants
-const int SCREEN_WIDTH = 1920;
-const int SCREEN_HEIGHT = 950;
+const int SCREEN_WIDTH = 1024;
+const int SCREEN_HEIGHT = 900;
 
 //Key press surfaces constants
 enum KeyPressSurfaces
@@ -127,6 +127,11 @@ class Dot
 		int manshi2=1;
 		//false means collision
 		
+		
+		//The velocity of the dot
+		int mVelX, mVelY;
+		
+		
 		void startVel();
 		void stopVel();
 
@@ -134,8 +139,6 @@ class Dot
 		//The X and Y offsets of the dot
 		int mPosX, mPosY;
 
-		//The velocity of the dot
-		int mVelX, mVelY;
 		int prevmVelX, prevmVelY;
 		
 		//Ghost's collision box
@@ -265,6 +268,7 @@ LTexture task8;
 
 LTexture taskdone;
 LTexture point1;
+LTexture yululogo;
 LTexture player2;
 
 //The music that will be played
@@ -550,12 +554,19 @@ void Ghost::handleEvent( SDL_Event& e )
 void Dot::move(SDL_Rect wall[], int length1 ,SDL_Rect ghostCollider)
 {
     //Move the dot left or right
+    cout<< DOT_VEL<< "DOT_VEL"<< endl;
     mPosX += mVelX;
+    cout<<mVelX<<" mVelX "<<endl;
 mCollider.x = mPosX;
     //If the dot went too far to the left or right
-    if( ( mPosX < 0 ) || ( mPosX + DOT_WIDTH > LEVEL_WIDTH ) || checkCollision( mCollider, wall, length1 ) )
+    if( ( mPosX < 0 ) || ( mPosX + DOT_WIDTH > LEVEL_WIDTH )  || checkCollision( mCollider, wall, length1 ) )
     {
         //Move back
+      //  cout<< "( mPosX < 0 )"<< ( mPosX < 0 )<<endl;
+      //  cout<< "( mPosX + DOT_WIDTH > LEVEL_WIDTH )"<<( mPosX + DOT_WIDTH > LEVEL_WIDTH ) <<endl;
+      //  cout<< "checkCollision( mCollider, wall, length1 )"<<checkCollision( mCollider, wall, length1 ) <<endl;
+        
+        //mPosX=0;
         mPosX -= mVelX;
         mCollider.x = mPosX;
     }
@@ -563,7 +574,7 @@ mCollider.x = mPosX;
     //Move the dot up or down
     mPosY += mVelY;
 	mCollider.y = mPosY;    
-
+ cout<<mVelY<<" mVelY "<<endl;
     //If the dot went too far up or down
     if( ( mPosY < 0 ) || ( mPosY + DOT_HEIGHT > LEVEL_HEIGHT ) || checkCollision( mCollider, wall, length1 ))
     {
@@ -578,13 +589,14 @@ mCollider.x = mPosX;
     Mix_PlayChannel( -1, gLow, 0 );
     
 	}
-	// if(( mPosY < 0 ) || ( mPosY + DOT_HEIGHT > LEVEL_HEIGHT ) || !checkCollisionAC(mCollider, perryCollider)){
+	// if(( mPosY < 0 ) || ( mPosY + DOT_HEIGHT > LEVEL_HEIGHT ))  || !checkCollisionAC(mCollider, perryCollider))
+	//{
     // points+=2;
 	// pointsupdated=true;
 	
 	// }
-}
 
+}
 //=============
 
 void Ghost::move(SDL_Rect wall[], int length)
@@ -1033,6 +1045,11 @@ bool loadMedia()
 		printf( "Failed to load background texture!\n" );
 		success = false;
 	}
+	if( !yululogo.loadFromFile( "pics/yululogo.png" ) )
+	{
+		printf( "Failed to load yululogo texture!\n" );
+		success = false;
+	}
 	
 if( !oops.loadFromFile( "pics/oops.png" ) )
 	{
@@ -1103,6 +1120,7 @@ void close()
 	taskdone.free();
     player2.free();
 	point1.free();
+	yululogo.free();
 	oops.free();
 	yulu.free();
 	nocoins.free();
@@ -1414,6 +1432,7 @@ int main( int argc, char* args[] )
 
 			//Current time start time
 			Uint32 startTime = 0;
+			Uint32 yuluStart = 0;
 
 			//In memory text stream
 			std::stringstream timeText;
@@ -1829,6 +1848,8 @@ int main( int argc, char* args[] )
 			int m2times =0;
 			int alpha=0;
 			int song_only1=0;
+			int yulu_use =0;
+			int yulu_end_vel0=0;
 			//Set default current surface
 			gDotTexture = gKeyPressSurfaces[ KEY_PRESS_SURFACE_DEFAULT ];
 
@@ -2065,6 +2086,8 @@ int main( int argc, char* args[] )
 							if(!checkCollisionAC(dot.mCollider, wall64)){
 							//dot.points+=1;
 							Mix_PlayChannel( -1, gHigh, 0 );
+							yuluStart = SDL_GetTicks();
+							yulu_use=1;
 							//dot.pointsupdated=true;
 							//task8.isdone=true;
 							//TASK COMPLETED
@@ -2099,13 +2122,13 @@ int main( int argc, char* args[] )
 				}
 
 				//Move the dot and check collision
-				SDL_Rect wallarray[64]={wall1, wall2, wall3, wall4, wall5, wall6, wall7, wall8, wall9, wall10, wall11, wall12, wall13, wall14, wall15, wall16, wall17, wall18, wall19, wall20, wall21, wall22, wall23, wall24, wall25, wall26, wall27, wall28, wall29, wall30, wall31, wall32, wall33, wall34, wall35, wall36, wall37, wall38, wall39, wall40, wall41, wall42, wall43, wall44, wall45, wall46, wall47, wall48,wall49,wall50,wall51,wall52,wall53, wall54,wall55 ,wall56, wall57, wall58, wall59, wall60, wall61, wall62, wall63};
+				SDL_Rect wallarray[63]={wall1, wall2, wall3, wall4, wall5, wall6, wall7, wall8, wall9, wall10, wall11, wall12, wall13, wall14, wall15, wall16, wall17, wall18, wall19, wall20, wall21, wall22, wall23, wall24, wall25, wall26, wall27, wall28, wall29, wall30, wall31, wall32, wall33, wall34, wall35, wall36, wall37, wall38, wall39, wall40, wall41, wall42, wall43, wall44, wall45, wall46, wall47, wall48,wall49,wall50,wall51,wall52,wall53, wall54,wall55 ,wall56, wall57, wall58, wall59, wall60, wall61, wall62, wall63};
 				int walltaskdone[64]={0};
 				
 				/*for(int i=0;i<2;i++){
 				dot.move( wallarray ,48,ghostarray[i].ghostCollider );}*/
 				
-				dot.move( wallarray ,64,doctor.ghostCollider );
+				dot.move( wallarray ,63,doctor.ghostCollider );
 				
 				doctor.move(wallarray, 64);
 				ghost2.move(wallarray, 64);
@@ -2171,6 +2194,12 @@ int main( int argc, char* args[] )
 				//Render background
 				gBGTexture.render( 0, 0, &camera );
 				
+				if(yulu_use==1)
+				{
+				//cout<<"Usinggggggg";
+					yululogo.render(0,120);
+				}
+				
 				//initialize life of player
 				//manshi = false means already colliding , manshi = true means no collision till now
 				//checkcollisionlife = false means collision
@@ -2189,7 +2218,7 @@ int main( int argc, char* args[] )
 				//manshi2 =1 means it has not collided with perry yet , manshi2=2 means it has collided with perry alrady and got points
 				if(!(checkCollisionAC(dot.mCollider,perry.ghostCollider)) ){
 				if(dot.manshi2==1){
-				cout<<dot.life<<":life ";
+				//cout<<dot.life<<":life ";
 				
 				dot.points+=2;
 				Mix_PlayChannel( -1, gPlatypus, 0 );
@@ -2422,9 +2451,23 @@ int main( int argc, char* args[] )
 				song_only1 =1;
 				}
 				}
+				//cout<< "yuluStart " << yuluStart<<endl;
+				//cout<< "SDL_GetTicks() " << SDL_GetTicks()<<endl;
+				
+				if(yuluStart + 10000 < SDL_GetTicks() and yulu_end_vel0==0)
+				{
+				yulu_use =0;
+				dot.DOT_VEL =25;
+				dot.mVelX=0;
+				dot.mVelY=0;
+				yulu_end_vel0 =1;
+				}
+				
+				
 				gPromptTextTexture.render( ( SCREEN_WIDTH - gPromptTextTexture.getWidth() ) / 2, 0 );
 				gMapWindowTexture.render( 0, 0);
 				//Render textures
+				
 				
 				gTimeTextTexture.render( 0,80);
 				
