@@ -227,6 +227,7 @@ LTexture gMapWindowTexture;
 LTexture gInstrWindowTexture;
 LTexture gStopTexture;
 LTexture oops;
+LTexture yulu;
 LTexture nocoins;
 LTexture win;
 
@@ -476,6 +477,7 @@ void Dot::handleEvent( SDL_Event& e , int m2times)
             		DOT_VEL= 25;
             		break;
             		}
+            case SDLK_w: DOT_VEL =35; break; //yulu increases speed by 10
             case SDLK_w: DOT_VEL= 0;break;
             case SDLK_s: DOT_VEL= 25;break;
             case SDLK_UP: mVelY -= DOT_VEL; break;
@@ -490,6 +492,7 @@ void Dot::handleEvent( SDL_Event& e , int m2times)
         //Adjust the velocity
         switch( e.key.keysym.sym )
         {
+            case SDLK_w: DOT_VEL =35; break; //yulu increases speed by 10
             case SDLK_w: DOT_VEL= 0;break;
             case SDLK_s: DOT_VEL= 25;break;
             case SDLK_UP: mVelY += DOT_VEL; break;
@@ -992,6 +995,11 @@ if( !oops.loadFromFile( "pics/oops.png" ) )
 		printf( "Failed to load background texture!\n" );
 		success = false;
 	}
+if( !yulu.loadFromFile( "pics/yulu.png" ) )
+	{
+		printf( "Failed to load background texture!\n" );
+		success = false;
+	}
 
 	if( !nocoins.loadFromFile( "pics/nocoins.png" ) )
 	{
@@ -1044,6 +1052,7 @@ void close()
     player2.free();
 	point1.free();
 	oops.free();
+	yulu.free();
 	nocoins.free();
 	win.free();
 	
@@ -1310,7 +1319,7 @@ int main( int argc, char* args[] )
     serv_addr.sin_port = htons(PORT);
  
     // Convert IPv4 and IPv6 addresses from text to binary
-    if (inet_pton(AF_INET, "10.184.50.0", &serv_addr.sin_addr)
+    if (inet_pton(AF_INET, "10.184.7.66", &serv_addr.sin_addr)
         <= 0) {
         printf(
             "\nInvalid address/ Address not supported \n");
@@ -1321,7 +1330,7 @@ int main( int argc, char* args[] )
         < 0) {
         printf("\nConnection Failed \n");
         return -1;
-    }*/
+    } */
     //sockets end
 
 
@@ -1741,6 +1750,14 @@ int main( int argc, char* args[] )
 			wall63.w = 4* 32;
 			wall63.h = 2* 32 + 32;
 			
+			//yulu1
+			SDL_Rect wall64;
+			wall64.x = 295* 32;
+			wall64.y = 56* 32 ;
+			wall64.w = 4* 32;
+			wall64.h = 3* 32 ;
+			
+			
 			//The camera area
 			SDL_Rect camera = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT};
 			int flag=0;
@@ -1974,6 +1991,18 @@ int main( int argc, char* args[] )
 							//TASK COMPLETED
 							}
 						}
+						else if( e.key.keysym.sym == SDLK_y and flag == 1)
+						{
+						//task8
+							if(!checkCollisionAC(dot.mCollider, wall64)){
+							//dot.points+=1;
+							Mix_PlayChannel( -1, gHigh, 0 );
+							//dot.pointsupdated=true;
+							//task8.isdone=true;
+							//TASK COMPLETED
+							}
+						}
+						
 						else if(flag == 1)
 						{
 							gDotTexture = gKeyPressSurfaces[ KEY_PRESS_SURFACE_DEFAULT ];
@@ -1993,21 +2022,21 @@ int main( int argc, char* args[] )
 				}
 
 				//Move the dot and check collision
-				SDL_Rect wallarray[63]={wall1, wall2, wall3, wall4, wall5, wall6, wall7, wall8, wall9, wall10, wall11, wall12, wall13, wall14, wall15, wall16, wall17, wall18, wall19, wall20, wall21, wall22, wall23, wall24, wall25, wall26, wall27, wall28, wall29, wall30, wall31, wall32, wall33, wall34, wall35, wall36, wall37, wall38, wall39, wall40, wall41, wall42, wall43, wall44, wall45, wall46, wall47, wall48,wall49,wall50,wall51,wall52,wall53, wall54,wall55 ,wall56, wall57, wall58, wall59, wall60, wall61, wall62, wall63};
-				int walltaskdone[63]={0};
+				SDL_Rect wallarray[64]={wall1, wall2, wall3, wall4, wall5, wall6, wall7, wall8, wall9, wall10, wall11, wall12, wall13, wall14, wall15, wall16, wall17, wall18, wall19, wall20, wall21, wall22, wall23, wall24, wall25, wall26, wall27, wall28, wall29, wall30, wall31, wall32, wall33, wall34, wall35, wall36, wall37, wall38, wall39, wall40, wall41, wall42, wall43, wall44, wall45, wall46, wall47, wall48,wall49,wall50,wall51,wall52,wall53, wall54,wall55 ,wall56, wall57, wall58, wall59, wall60, wall61, wall62, wall63};
+				int walltaskdone[64]={0};
 				
 				/*for(int i=0;i<2;i++){
 				dot.move( wallarray ,48,ghostarray[i].ghostCollider );}*/
 				
-				dot.move( wallarray ,63,doctor.ghostCollider );
+				dot.move( wallarray ,64,doctor.ghostCollider );
 				
-				doctor.move(wallarray, 63);
-				ghost2.move(wallarray, 63);
-				ghost3.move(wallarray, 63);
+				doctor.move(wallarray, 64);
+				ghost2.move(wallarray, 64);
+				ghost3.move(wallarray, 64);
 
-				perry.move(wallarray, 63);
-				ghost1.move(wallarray, 63);
-				ghost4.move(wallarray, 63);
+				perry.move(wallarray, 64);
+				ghost1.move(wallarray, 64);
+				ghost4.move(wallarray, 64);
 
 				//Center the camera over the dot
 				camera.x = ( dot.getPosX() + Dot::DOT_WIDTH / 2 ) - SCREEN_WIDTH / 2;
@@ -2031,8 +2060,8 @@ int main( int argc, char* args[] )
 					camera.y = LEVEL_HEIGHT - camera.h;
 				}
 
-				//sockets start
-			/*	string ss = "POINTS="+to_string(dot.points)+"." +to_string(dot.getPosX())+","+ to_string(dot.getPosY());
+			/*	//sockets start
+				string ss = "POINTS="+to_string(dot.points)+"." +to_string(dot.getPosX())+","+ to_string(dot.getPosY());
 
 				char* hello2 =  const_cast<char*>(ss.c_str());
 				    
@@ -2055,7 +2084,7 @@ int main( int argc, char* args[] )
                 ind1 = stoi(str1);
                 ind2 = stoi(str2);
                 cout<< "ind1 :"<< ind1 << endl;
-                cout<< "ind2 :"<< ind2<< endl; */
+                cout<< "ind2 :"<< ind2<< endl; */ 
 				//sockets end
 				
 				//Clear screen
@@ -2272,6 +2301,15 @@ int main( int argc, char* args[] )
 					
 					}
 				}
+				else if(!checkCollisionAC(dot.mCollider, wall64)){
+				yulu.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
+				dot.points=0;
+				if(dot.pointsupdated){
+				//cout<<"wall63 ";
+					taskdone.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
+					
+					}
+				}
 				else {dot.pointsupdated = false;}
 				//POINTS
 				if(dot.points>=1){
@@ -2314,3 +2352,4 @@ int main( int argc, char* args[] )
 
 	return 0;
 }
+
