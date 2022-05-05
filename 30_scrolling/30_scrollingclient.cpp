@@ -1169,14 +1169,14 @@ int main( int argc, char* args[] )
     serv_addr.sin_port = htons(PORT);
  
     // Convert IPv4 and IPv6 addresses from text to binary
-    if (inet_pton(AF_INET, "10.194.30.228", &serv_addr.sin_addr)
+    if (inet_pton(AF_INET, "10.184.50.0", &serv_addr.sin_addr)
         <= 0) {
         printf(
             "\nInvalid address/ Address not supported \n");
         return -1;
     }
     if (connect(sock, (struct sockaddr*)&serv_addr,
-                // sizeof(serv_addr))
+                sizeof(serv_addr))
         < 0) {
         printf("\nConnection Failed \n");
         return -1;
@@ -1858,7 +1858,8 @@ int main( int argc, char* args[] )
 					camera.y = LEVEL_HEIGHT - camera.h;
 				}
 				//sockets start
-				string ss =to_string (dot.getPosX()) + "," + to_string (dot.getPosY());
+				string ss = "POINTS="+to_string(dot.points)+"." +to_string(dot.getPosX())+","+ to_string(dot.getPosY());
+
 				char* hello2 =  const_cast<char*>(ss.c_str());
 				    
 				send(sock, hello2, strlen(hello2), 0);
@@ -1868,14 +1869,20 @@ int main( int argc, char* args[] )
                 valread = read(sock, buffer2, 1024);
                 //printf("%s\n", buffer2);
                 string strr=buffer2;
+                int index1 = strr.find('=');
+                int index2 = strr.find('.');
                 int index = strr.find(',');
-                string str1= strr.substr(0, index);
+				//points=5. index1=6,index2=8
+                string str3 =strr.substr(index1+1 ,index2-index1-1);
+                string str1= strr.substr(index2+1, index-index2-1);
                 string str2 =strr.substr(index+1 ,strr.length()-1-index);
+
+				cout<<"points:"<<stoi(str3)<<" ";
                 ind1 = stoi(str1);
                 ind2 = stoi(str2);
                 cout<< "ind1 :"<< ind1 << endl;
                 cout<< "ind2 :"<< ind2<< endl;
-				//socketa end
+				//sockets end
                 
 				//Clear screen
 				SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF );
