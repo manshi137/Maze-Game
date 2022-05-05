@@ -1284,7 +1284,7 @@ bool checkCollisionAC( SDL_Rect a, SDL_Rect b )
 
 int main( int argc, char* args[] )
 {	//sockets start
-/*	int counter=0;
+	int counter=0;
     int server_fd, new_socket, valread;
     struct sockaddr_in address;
     int opt = 1;
@@ -1327,7 +1327,7 @@ if (setsockopt(server_fd, SOL_SOCKET, SO_REUSEADDR , &opt, sizeof(opt))) {
         exit(EXIT_FAILURE);
     }
     
-    //sockets end */
+    //sockets end 
 
 
 	//Start up SDL and create window
@@ -2036,7 +2036,7 @@ if (setsockopt(server_fd, SOL_SOCKET, SO_REUSEADDR , &opt, sizeof(opt))) {
 				}
 
 				 //sockets start
-	/*			char buffer2[1024] = { 0 };
+				char buffer2[1024] = { 0 };
 				    	valread = read(new_socket, buffer2, 1024);
 				    	//printf("%s\n", buffer2);
 				    string strr=buffer2;
@@ -2057,7 +2057,7 @@ if (setsockopt(server_fd, SOL_SOCKET, SO_REUSEADDR , &opt, sizeof(opt))) {
 								string ss = "POINTS="+to_string(dot.points)+"." +to_string(dot.getPosX())+","+ to_string(dot.getPosY());
 								char* hello2 = const_cast<char*>(ss.c_str());
 
-					send(new_socket, hello2, strlen(hello2), 0);*/
+					send(new_socket, hello2, strlen(hello2), 0);
 
 				//sockets end
 
