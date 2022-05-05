@@ -71,6 +71,7 @@ class LTexture
 		//Gets image dimensions
 		int getWidth();
 		int getHeight();
+		bool isdone=false;
 
 	private:
 		//The actual hardware texture
@@ -121,6 +122,7 @@ class Dot
 		int points = 0;
 		bool pointsupdated = false;
 		bool manshi=true; // true means no collision
+		int manshi2=1;
 		//false means collision
 		
 		void startVel();
@@ -136,6 +138,8 @@ class Dot
 		
 		//Ghost's collision box
 		SDL_Rect ghostCollider;
+
+		
 };
 //========================================================================================================
 class Ghost
@@ -168,6 +172,7 @@ class Ghost
 		void stopVel();
 		//Ghost's collision box
 		SDL_Rect ghostCollider;
+		
 
     private:
 		//The X and Y offsets of the ghost
@@ -213,10 +218,15 @@ SDL_Renderer* gRenderer = NULL;
 LTexture gDotTexture;
 LTexture ghostTexture1;
 LTexture ghostTexture2;
+LTexture ghostTexture3;
+
 LTexture gBGTexture;
 LTexture gPauseTexture;
 LTexture gStartTexture;
 LTexture oops;
+LTexture nocoins;
+LTexture win;
+
 LTexture lifeT1;
 LTexture lifeT2;
 LTexture lifeT3;
@@ -224,6 +234,7 @@ LTexture lifeT4;
 LTexture lifeT5;
 LTexture task1;
 LTexture task2;
+LTexture task22;
 LTexture task3;
 LTexture task41;
 
@@ -422,6 +433,7 @@ Ghost::Ghost(int x, int y)
     //Set collision box dimension
 	ghostCollider.w = GHOST_WIDTH;
 	ghostCollider.h = GHOST_HEIGHT;
+	
 
     //Initialize the velocity
     ghostVelX = 1;
@@ -520,9 +532,15 @@ mCollider.x = mPosX;
         mCollider.y = mPosY;
     }
     if(( mPosY < 0 ) || ( mPosY + DOT_HEIGHT > LEVEL_HEIGHT ) || !checkCollisionAC(mCollider, ghostCollider)){
-    mPosX= 306	* 32;
-			
-    mPosY= 57* 32;}
+    mPosX= 306	* 32;	
+    mPosY= 57* 32;
+	
+	}
+	// if(( mPosY < 0 ) || ( mPosY + DOT_HEIGHT > LEVEL_HEIGHT ) || !checkCollisionAC(mCollider, perryCollider)){
+    // points+=2;
+	// pointsupdated=true;
+	
+	// }
 }
 
 //=============
@@ -551,6 +569,7 @@ ghostCollider.x = ghostPosX;
         ghostPosY -= ghostVelY;
         ghostCollider.y = ghostPosY;
     }
+	
 }
 
 
@@ -564,11 +583,14 @@ void Dot::render( int camX, int camY )
 void Ghost::render( int camX, int camY,int isDoc )
 {
     //Show the dot relative to the camera
-    if(isDoc==1){
+    if(isDoc==1){// render doctor
 	ghostTexture1.render( ghostPosX - camX, ghostPosY - camY );}
-	else{
+	else if(isDoc==0){//render dog
 	ghostTexture2.render( ghostPosX - camX, ghostPosY - camY );}
-}
+	else{
+	ghostTexture3.render( ghostPosX - camX, ghostPosY - camY );}
+	}
+
 //===========
 
 void Dot::stopVel()
@@ -723,6 +745,11 @@ bool loadMedia()
 		printf( "Failed to load dog texture!\n" );
 		success = false;
 	}
+	if( !ghostTexture3.loadFromFile( "pics/perry.png" ) )
+	{
+		printf( "Failed to load dog texture!\n" );
+		success = false;
+	}
 
 	//Load background texture
 	if( !gBGTexture.loadFromFile( "pics/map.png" ) )
@@ -765,6 +792,11 @@ bool loadMedia()
 		printf( "Failed to load background texture!\n" );
 		success = false;
 	}
+	if( !task22.loadFromFile( "pics/task2.png" ) )
+ 	{
+ 		printf( "Failed to load background texture!\n" );
+ 		success = false;
+ 	}
 	if( !task3.loadFromFile( "pics/task3.png" ) )
 	{
 		printf( "Failed to load background texture!\n" );
@@ -843,6 +875,17 @@ if( !oops.loadFromFile( "pics/oops.png" ) )
 		success = false;
 	}
 
+	if( !nocoins.loadFromFile( "pics/nocoins.png" ) )
+	{
+		printf( "Failed to load background texture!\n" );
+		success = false;
+	}
+	if( !win.loadFromFile( "pics/win.png" ) )
+	{
+		printf( "Failed to load background texture!\n" );
+		success = false;
+	}
+
 	return success;
 }
 
@@ -852,6 +895,8 @@ void close()
 	gDotTexture.free();
 	ghostTexture1.free();
 	ghostTexture2.free();
+	ghostTexture3.free();
+
 	gBGTexture.free();
 	gPauseTexture.free();
 	gStartTexture.free();
@@ -862,6 +907,7 @@ void close()
 	lifeT5.free();
 	task1.free();
 	task2.free();
+	task22.free();
 	task3.free();
 	task41.free();
 	task42.free();
@@ -877,7 +923,8 @@ void close()
     player2.free();
 	point1.free();
 	oops.free();
-
+	nocoins.free();
+	win.free();
 	//Destroy window	
 	SDL_DestroyRenderer( gRenderer );
 	SDL_DestroyWindow( gWindow );
@@ -1053,9 +1100,6 @@ bool checkCollisionlife( SDL_Rect a, SDL_Rect b[], int length )
     return iscollisionlife;
 }
 
-
-
-//check collision between dogs and player
 //check collision between two rectangles 
 bool checkCollisionAC( SDL_Rect a, SDL_Rect b )
 {
@@ -1111,12 +1155,10 @@ bool checkCollisionAC( SDL_Rect a, SDL_Rect b )
 
 
 int main( int argc, char* args[] )
-{
+{	//sockets start
     int counter =0;
     int sock = 0, valread;
     struct sockaddr_in serv_addr;
-    // char* hello = "hello from client" ;
-    // char buffer[1024] = { 0 };
     
     if ((sock = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
         printf("\n Socket creation error \n");
@@ -1127,21 +1169,19 @@ int main( int argc, char* args[] )
     serv_addr.sin_port = htons(PORT);
  
     // Convert IPv4 and IPv6 addresses from text to binary
-    // form
     if (inet_pton(AF_INET, "10.194.30.228", &serv_addr.sin_addr)
         <= 0) {
         printf(
             "\nInvalid address/ Address not supported \n");
         return -1;
     }
- 
     if (connect(sock, (struct sockaddr*)&serv_addr,
-                sizeof(serv_addr))
+                // sizeof(serv_addr))
         < 0) {
         printf("\nConnection Failed \n");
         return -1;
     }
-    
+    //sockets end
 	//Start up SDL and create window
 	if( !init() )
 	{
@@ -1168,14 +1208,13 @@ int main( int argc, char* args[] )
 
 			//The dot that will be moving around on the screen
 			Dot dot;
-			Ghost ghost1(131* 32-64,58* 32);
-			//ghost1.Ghost(672,224);
+			Ghost doctor(255* 32-64,37* 32);
+			Ghost perry(280*32,57*32);
+			
 			Ghost ghost2(22* 32,25* 32 -32);
 			Ghost ghost3(131* 32-64,58* 32);
-			//ghost2.Ghost(22* 32,25* 32 -32);
-			
-			//Ghost ghostarray[2]={ghost1,ghost2};
-			
+			Ghost ghost4(277* 32-64,86* 32);
+			Ghost ghost1(21* 32-64,25* 32);
 			//Set the wall
 			SDL_Rect wall1;
 			wall1.x = 672;
@@ -1420,7 +1459,7 @@ int main( int argc, char* args[] )
 			SDL_Rect wall41;
 			wall41.x = 256* 32;
 			wall41.y = 67* 32-64;
-			wall41.w = 47* 32;
+			wall41.w = 30* 32;
 			wall41.h = 1* 32+64;
 
 			SDL_Rect wall42;
@@ -1537,19 +1576,19 @@ int main( int argc, char* args[] )
 			wall60.w = 2*32 +32;
 			wall60.h = 2*32 +32;
 			
-			SDL_Rect wall61;//hockey
-			wall61.x = 136* 32 -32;
+			SDL_Rect wall62;//hockey
+			wall62.x = 136* 32 -32;
+			wall62.y = 67*32 -32;
+			wall62.w = 2*32 +32;
+			wall62.h = 2*32 +32;
+			
+			SDL_Rect wall61;//cricket
+			wall61.x = 120* 32;
 			wall61.y = 67*32 -32;
-			wall61.w = 2*32 +32;
+			wall61.w = 10*32 ;
 			wall61.h = 2*32 +32;
 			
-			SDL_Rect wall62;//cricket
-			wall62.x = 120* 32;
-			wall62.y = 67*32 -32;
-			wall62.w = 10*32 ;
-			wall62.h = 2*32 +32;
-			//oops
-			SDL_Rect wall63;
+			SDL_Rect wall63;//oops
 			wall63.x = 303* 32;
 			wall63.y = 57* 32 -32 ;
 			wall63.w = 4* 32;
@@ -1588,14 +1627,14 @@ int main( int argc, char* args[] )
 						{
 							a= 255;
 							dot.stopVel();
-							ghost1.stopVel();
+							doctor.stopVel();
 						}
 						//Decrease alpha on s
 						else if( e.key.keysym.sym == SDLK_s and flag == 1)
 						{
 							a=0;
 							dot.startVel();
-							ghost1.startVel();
+							doctor.startVel();
 						}
 						else if( e.key.keysym.sym == SDLK_UP and flag == 1)
 						{
@@ -1621,6 +1660,7 @@ int main( int argc, char* args[] )
 							cout<<dot.points;
 							
 							dot.pointsupdated=true;
+							task1.isdone=true;
 							//TASK COMPLETED
 							}
 						}
@@ -1631,12 +1671,14 @@ int main( int argc, char* args[] )
 							dot.points+=1;
 							cout<<dot.points;
 							dot.pointsupdated=true;
+							task2.isdone=true;
 							//TASK COMPLETED
 							}
 							else if(!checkCollisionAC(dot.mCollider, wall51)){
 							dot.points+=1;
 							cout<<dot.points;
 							dot.pointsupdated=true;
+							 task22.isdone=true;
 							//TASK COMPLETED
 							}
 						}	
@@ -1647,6 +1689,7 @@ int main( int argc, char* args[] )
 							dot.points+=1;
 							cout<<dot.points;
 							dot.pointsupdated=true;
+							task3.isdone=true;
 							//TASK COMPLETED
 							}
 						}
@@ -1654,29 +1697,46 @@ int main( int argc, char* args[] )
 						{
 						//task4
 							if(!checkCollisionAC(dot.mCollider, wall56)){
+							
+							if(  dot.points!=0)
+							{dot.life=5;
+							cout<<dot.points;
+							task41.isdone=true;}
 							dot.points-=1;
-							dot.life=5;
 							cout<<dot.points;
 							dot.pointsupdated=true;
 							//TASK COMPLETED
 							}
 							else if(!checkCollisionAC(dot.mCollider, wall57)){
+							
+							if(  dot.points!=0)
+							{dot.life=5;
+							cout<<dot.points;
+							task43.isdone=true;}
 							dot.points-=1;
-							dot.life=5;
 							cout<<dot.points;
 							dot.pointsupdated=true;
 							//TASK COMPLETED
 							}
 							else if(!checkCollisionAC(dot.mCollider, wall58)){
+							
+							if(  dot.points!=0)
+							{dot.life=5;
+							cout<<dot.points;
+							task44.isdone=true;}
+
 							dot.points-=1;
-							dot.life=5;
 							cout<<dot.points;
 							dot.pointsupdated=true;
 							//TASK COMPLETED
 							}
 							else if(!checkCollisionAC(dot.mCollider, wall59)){
+				
+							if(  dot.points!=0)
+							{dot.life=5;
+							cout<<dot.points;
+							task42.isdone=true;}
 							dot.points-=1;
-							dot.life=5;
 							cout<<dot.points;
 							dot.pointsupdated=true;
 							//TASK COMPLETED
@@ -1689,6 +1749,7 @@ int main( int argc, char* args[] )
 							dot.points+=1;
 							cout<<dot.points;
 							dot.pointsupdated=true;
+							task5.isdone=true;
 							//TASK COMPLETED
 							}
 						}
@@ -1699,18 +1760,21 @@ int main( int argc, char* args[] )
 							dot.points+=1;
 							cout<<dot.points;
 							dot.pointsupdated=true;
-							//TASK COMPLETED
-							}
-							else if(!checkCollisionAC(dot.mCollider, wall60)){
-							dot.points+=1;
-							cout<<dot.points;
-							dot.pointsupdated=true;
+							task61.isdone=true;
 							//TASK COMPLETED
 							}
 							else if(!checkCollisionAC(dot.mCollider, wall62)){
 							dot.points+=1;
 							cout<<dot.points;
 							dot.pointsupdated=true;
+							task62.isdone=true;
+							//TASK COMPLETED
+							}
+							else if(!checkCollisionAC(dot.mCollider, wall60)){
+							dot.points+=1;
+							cout<<dot.points;
+							dot.pointsupdated=true;
+							task63.isdone=true;
 							//TASK COMPLETED
 							}
 						}
@@ -1721,6 +1785,7 @@ int main( int argc, char* args[] )
 							dot.points+=1;
 							cout<<dot.points;
 							dot.pointsupdated=true;
+							task7.isdone=true;
 							//TASK COMPLETED
 							}
 						}
@@ -1732,6 +1797,7 @@ int main( int argc, char* args[] )
 							dot.points+=1;
 							cout<<dot.points;
 							dot.pointsupdated=true;
+							task8.isdone=true;
 							//TASK COMPLETED
 							}
 						}
@@ -1744,25 +1810,31 @@ int main( int argc, char* args[] )
 				if(flag==1){
 					//Handle input for the dot
 					dot.handleEvent( e );
-					ghost1.handleEvent( e);
+					doctor.handleEvent( e);
 					ghost2.handleEvent( e);
 					ghost3.handleEvent( e);
-			
+					perry.handleEvent( e);
+					ghost1.handleEvent( e);
+					ghost4.handleEvent( e);
 					}
 				}
 
 				//Move the dot and check collision
 				SDL_Rect wallarray[63]={wall1, wall2, wall3, wall4, wall5, wall6, wall7, wall8, wall9, wall10, wall11, wall12, wall13, wall14, wall15, wall16, wall17, wall18, wall19, wall20, wall21, wall22, wall23, wall24, wall25, wall26, wall27, wall28, wall29, wall30, wall31, wall32, wall33, wall34, wall35, wall36, wall37, wall38, wall39, wall40, wall41, wall42, wall43, wall44, wall45, wall46, wall47, wall48,wall49,wall50,wall51,wall52,wall53, wall54,wall55 ,wall56, wall57, wall58, wall59, wall60, wall61, wall62, wall63};
-				//dot.move( wall );
+				int walltaskdone[63]={0};
 				
 				/*for(int i=0;i<2;i++){
 				dot.move( wallarray ,48,ghostarray[i].ghostCollider );}*/
 				
-				dot.move( wallarray ,63,ghost1.ghostCollider );
+				dot.move( wallarray ,63,doctor.ghostCollider );
 				
-				ghost1.move(wallarray, 63);
+				doctor.move(wallarray, 63);
 				ghost2.move(wallarray, 63);
 				ghost3.move(wallarray, 63);
+
+				perry.move(wallarray, 63);
+				ghost1.move(wallarray, 63);
+				ghost4.move(wallarray, 63);
 
 				//Center the camera over the dot
 				camera.x = ( dot.getPosX() + Dot::DOT_WIDTH / 2 ) - SCREEN_WIDTH / 2;
@@ -1785,7 +1857,7 @@ int main( int argc, char* args[] )
 				{
 					camera.y = LEVEL_HEIGHT - camera.h;
 				}
-
+				//sockets start
 				string ss =to_string (dot.getPosX()) + "," + to_string (dot.getPosY());
 				char* hello2 =  const_cast<char*>(ss.c_str());
 				    
@@ -1803,7 +1875,7 @@ int main( int argc, char* args[] )
                 ind2 = stoi(str2);
                 cout<< "ind1 :"<< ind1 << endl;
                 cout<< "ind2 :"<< ind2<< endl;
-
+				//socketa end
                 
 				//Clear screen
 				SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF );
@@ -1815,17 +1887,26 @@ int main( int argc, char* args[] )
 				//initialize life of player
 				//manshi = false means already colliding , manshi = true means no collision till now
 				//checkcollisionlife = false means collision
-				SDL_Rect ghostColliderarray[2]={ghost2.ghostCollider,ghost3.ghostCollider};
+				SDL_Rect ghostColliderarray[4]={ghost2.ghostCollider, ghost3.ghostCollider, ghost1.ghostCollider, ghost4.ghostCollider};
 				
 				
-				if(!(checkCollisionlife(dot.mCollider,ghostColliderarray,2)) ){
+				if(!(checkCollisionlife(dot.mCollider,ghostColliderarray,4)) ){
 				if(dot.manshi){
-				cout<<dot.life<<" ";
+				cout<<dot.life<<":life ";
 				dot.life-=1;
 				dot.manshi = false;
 				}}
 				else{
 				dot.manshi = true;}
+
+				//manshi2 =1 means it has not collided with perry yet , manshi2=2 means it has collided with perry alrady and got points
+				if(!(checkCollisionAC(dot.mCollider,perry.ghostCollider)) ){
+				if(dot.manshi2==1){
+				cout<<dot.life<<":life ";
+				
+				dot.points+=2;
+				dot.manshi2 = 2;
+				}}
 				
 				
 				if(dot.life==5){
@@ -1846,13 +1927,163 @@ int main( int argc, char* args[] )
 				//Render objects
 				//gDotTexture.render(camera.x, camera.y );
 				dot.render( camera.x, camera.y );
-				ghost1.render( camera.x, camera.y,1 );
+				doctor.render( camera.x, camera.y,1 );
+				perry.render( camera.x, camera.y,2);
+
 				ghost2.render( camera.x, camera.y,0 );
 				ghost3.render( camera.x, camera.y,0 );
+				ghost1.render( camera.x, camera.y,0 );
+				ghost4.render( camera.x, camera.y,0 );
 				player2.render(ind1-camera.x,ind2-camera.y);
+				
+				//TASKS
+				if(!checkCollisionAC(dot.mCollider, wall49)){
+				task1.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
+				if(dot.pointsupdated or task1.isdone ){
+				//cout<<"wall49 ";
+					taskdone.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
+					////cout<<"wall50done ";
+					}
+				}
+				
+				else if(!checkCollisionAC(dot.mCollider, wall50)){
+				task2.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
+				if(dot.pointsupdated  or task2.isdone ){
+				//cout<<"wall50 ";
+					taskdone.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
+					//cout<<"wall50done ";
+					}
+				}
+				else if(!checkCollisionAC(dot.mCollider, wall51)){
+				task22.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
+				if(dot.pointsupdated or task22.isdone ){
+				//cout<<"wall51 ";
+					taskdone.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
+					////cout<<"wall50done ";
+					}
+				}
+				
+				else if(!checkCollisionAC(dot.mCollider, wall52)){
+				task3.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
+				if(dot.pointsupdated or task3.isdone ){
+				//cout<<"wall52 ";
+					taskdone.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
+					////cout<<"wall50done ";
+					}
+				}
+				
+				else if(!checkCollisionAC(dot.mCollider, wall56)){//amul
+				task41.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
+				if(dot.pointsupdated or task41.isdone ){
+				//cout<<"wall56 ";
+					taskdone.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
+					////cout<<"wall50done ";
+					if(dot.points<0){
+					nocoins.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
+					dot.points+=1;
+					dot.pointsupdated=true;}
+					}
+				}
+				else if(!checkCollisionAC(dot.mCollider, wall57)){
+				task43.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
+				if(dot.pointsupdated or task43.isdone ){
+				//cout<<"wall57 ";
+					taskdone.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
+					////cout<<"wall50done ";
+					if(dot.points<0){
+					nocoins.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
+					dot.points+=1;
+					dot.pointsupdated=true;}
+					}
+				}
+				else if(!checkCollisionAC(dot.mCollider, wall58)){//d16
+				task44.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
+				if(dot.pointsupdated or task44.isdone ){
+				//cout<<"wall58 ";
+					taskdone.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
+					////cout<<"wall50done ";
+					if(dot.points<0){
+					nocoins.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
+					dot.points+=1;
+					dot.pointsupdated=true;}
+					}
+				}
+				else if(!checkCollisionAC(dot.mCollider, wall59)){//masala mix
+				task42.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
+				if(dot.pointsupdated or task42.isdone ){
+				//cout<<"wall59 ";
+					taskdone.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
+					////cout<<"wall50done ";
+					if(dot.points<0){
+					nocoins.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
+					dot.points+=1;
+					dot.pointsupdated=true;
+					}
+					}
+				}
+				
+				else if(!checkCollisionAC(dot.mCollider, wall53)){
+				task5.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
+				if(dot.pointsupdated or task5.isdone ){
+				//cout<<"wall53 ";
+					taskdone.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
+					////cout<<"wall50done ";
+					}
+				}
+				else if(!checkCollisionAC(dot.mCollider, wall61)){
+				task61.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
+				if(dot.pointsupdated or task61.isdone ){
+				//cout<<"wall61 ";
+					taskdone.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
+					////cout<<"wall50done ";
+					}
+				}
+				else if(!checkCollisionAC(dot.mCollider, wall62)){
+				task62.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
+				if(dot.pointsupdated or task62.isdone ){
+				//cout<<"wall62 ";
+					taskdone.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
+					////cout<<"wall50done ";
+					}
+				
+				}
+				else if(!checkCollisionAC(dot.mCollider, wall60)){
+				task63.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
+				if(dot.pointsupdated or task63.isdone ){
+				//cout<<"wall60 ";
+					taskdone.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
+					////cout<<"wall50done ";
+					}
+				}
+				
+				else if(!checkCollisionAC(dot.mCollider, wall54)){
+				task7.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
+				if(dot.pointsupdated or task7.isdone ){
+				//cout<<"wall54 ";
+					taskdone.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
+					////cout<<"wall50done ";
+					}
+				}
+				
+				else if(!checkCollisionAC(dot.mCollider, wall55)){
+				task8.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
+				if(dot.pointsupdated or task8.isdone ){
+				//cout<<"wall55 ";
+					taskdone.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
+					////cout<<"wall50done ";
+					}
+				}
+				else if(!checkCollisionAC(dot.mCollider, wall63)){
+				oops.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
+				dot.points=0;
+				if(dot.pointsupdated){
+				//cout<<"wall63 ";
+					taskdone.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
+					
+					}
+				}
+				else {dot.pointsupdated = false;}
 				//POINTS
-				if(dot.points){
-				point1.render(SCREEN_WIDTH - 48,4);}
 				if(dot.points>=1){
 				point1.render(SCREEN_WIDTH - 48,4);}
 				if(dot.points>=2){
@@ -1873,145 +2104,13 @@ int main( int argc, char* args[] )
 				point1.render(SCREEN_WIDTH - 48*4,48);}
 				if(dot.points>=10){
 				point1.render(SCREEN_WIDTH - 48*5,48);
-				lifeT5.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
+				win.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);//player wins
 				}
-				
-				//TASKS
-				if(!checkCollisionAC(dot.mCollider, wall49)){
-				task1.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
-				if(dot.pointsupdated){
-				cout<<"wall49 ";
-					taskdone.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
-					//cout<<"wall50done ";
-					}
-				}
-				
-				else if(!checkCollisionAC(dot.mCollider, wall50)){
-				task2.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
-				if(dot.pointsupdated){
-				cout<<"wall50 ";
-					taskdone.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
-					cout<<"wall50done ";
-					}
-				}
-				else if(!checkCollisionAC(dot.mCollider, wall51)){
-				task2.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
-				if(dot.pointsupdated){
-				cout<<"wall51 ";
-					taskdone.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
-					//cout<<"wall50done ";
-					}
-				}
-				
-				else if(!checkCollisionAC(dot.mCollider, wall52)){
-				task3.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
-				if(dot.pointsupdated){
-				cout<<"wall52 ";
-					taskdone.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
-					//cout<<"wall50done ";
-					}
-				}
-				
-				else if(!checkCollisionAC(dot.mCollider, wall56)){
-				task41.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
-				if(dot.pointsupdated){
-				cout<<"wall56 ";
-					taskdone.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
-					//cout<<"wall50done ";
-					}
-				}
-				else if(!checkCollisionAC(dot.mCollider, wall57)){
-				task43.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
-				if(dot.pointsupdated){
-				cout<<"wall57 ";
-					taskdone.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
-					//cout<<"wall50done ";
-					}
-				}
-				else if(!checkCollisionAC(dot.mCollider, wall58)){
-				task44.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
-				if(dot.pointsupdated){
-				cout<<"wall58 ";
-					taskdone.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
-					//cout<<"wall50done ";
-					}
-				}
-				else if(!checkCollisionAC(dot.mCollider, wall59)){
-				task42.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
-				if(dot.pointsupdated){
-				cout<<"wall59 ";
-					taskdone.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
-					//cout<<"wall50done ";
-					}
-				}
-				
-				else if(!checkCollisionAC(dot.mCollider, wall53)){
-				task5.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
-				if(dot.pointsupdated){
-				cout<<"wall53 ";
-					taskdone.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
-					//cout<<"wall50done ";
-					}
-				}
-				
-				else if(!checkCollisionAC(dot.mCollider, wall60)){
-				task63.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
-				if(dot.pointsupdated){
-				cout<<"wall60 ";
-					taskdone.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
-					//cout<<"wall50done ";
-					}
-				}
-				else if(!checkCollisionAC(dot.mCollider, wall61)){
-				task62.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
-				if(dot.pointsupdated){
-				cout<<"wall61 ";
-					taskdone.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
-					//cout<<"wall50done ";
-					}
-				
-				}
-				else if(!checkCollisionAC(dot.mCollider, wall62)){
-				task61.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
-				if(dot.pointsupdated){
-				cout<<"wall62 ";
-					taskdone.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
-					//cout<<"wall50done ";
-					}
-				}
-				
-				else if(!checkCollisionAC(dot.mCollider, wall54)){
-				task7.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
-				if(dot.pointsupdated){
-				cout<<"wall54 ";
-					taskdone.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
-					//cout<<"wall50done ";
-					}
-				}
-				
-				else if(!checkCollisionAC(dot.mCollider, wall55)){
-				task8.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
-				if(dot.pointsupdated){
-				cout<<"wall55 ";
-					taskdone.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
-					//cout<<"wall50done ";
-					}
-				}
-				else if(!checkCollisionAC(dot.mCollider, wall63)){
-				oops.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
-				if(dot.pointsupdated){
-				cout<<"wall63 ";
-					taskdone.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
-					
-					}
-				}
-				else {dot.pointsupdated = false;}
-				
-				
 				gPauseTexture.render( 0, 0 );
 				gStartTexture.render(0, 0);
 				//Update screen
 				SDL_RenderPresent( gRenderer );
+				if(dot.pointsupdated){cout<<dot.points<<" ";}
 			}
 		}
 	}
