@@ -293,6 +293,11 @@ Mix_Music *gMusic = NULL;
 Mix_Chunk *gScratch = NULL;
 Mix_Chunk *gHigh = NULL;
 Mix_Chunk *gPlatypus = NULL;
+Mix_Chunk *gCandace = NULL;
+Mix_Chunk *gIsabella = NULL;
+Mix_Chunk *gVanessa = NULL;
+Mix_Chunk *gDog = NULL;
+Mix_Chunk *gYulu = NULL;
 Mix_Chunk *gEnergy = NULL;
 Mix_Chunk *gPause = NULL;
 Mix_Chunk *gMedium = NULL;
@@ -837,6 +842,42 @@ bool loadMedia()
 		success = false;
 	}
 
+	gCandace = Mix_LoadWAV( "sounds/Candace.wav" );
+	if( gCandace == NULL )
+	{
+		printf( "Failed to load Candace sound effect! SDL_mixer Error: %s\n", Mix_GetError() );
+		success = false;
+	}
+
+	gIsabella = Mix_LoadWAV( "sounds/isabella.wav" );
+	if( gIsabella == NULL )
+	{
+		printf( "Failed to load Isabella sound effect! SDL_mixer Error: %s\n", Mix_GetError() );
+		success = false;
+	}
+
+	gVanessa = Mix_LoadWAV( "sounds/vanessa.wav" );
+	if( gVanessa == NULL )
+	{
+		printf( "Failed to load Vanessa sound effect! SDL_mixer Error: %s\n", Mix_GetError() );
+		success = false;
+	}
+
+	gDog = Mix_LoadWAV( "sounds/dog.wav" );
+	if( gDog == NULL )
+	{
+		printf( "Failed to load dog sound effect! SDL_mixer Error: %s\n", Mix_GetError() );
+		success = false;
+	}
+
+	gYulu = Mix_LoadWAV( "sounds/yulu.wav" );
+	if( gYulu == NULL )
+	{
+		printf( "Failed to load yulu sound effect! SDL_mixer Error: %s\n", Mix_GetError() );
+		success = false;
+	}
+
+
 	gEnergy = Mix_LoadWAV( "sounds/smb_powerup.wav" );
 	if( gEnergy == NULL )
 	{
@@ -1251,6 +1292,11 @@ void close()
 	Mix_FreeChunk( gScratch );
 	Mix_FreeChunk( gHigh );
 	Mix_FreeChunk( gPlatypus );
+	Mix_FreeChunk( gCandace );
+	Mix_FreeChunk( gIsabella );
+	Mix_FreeChunk( gVanessa );
+	Mix_FreeChunk( gDog );
+	Mix_FreeChunk( gYulu );
 	Mix_FreeChunk( gEnergy );
 	Mix_FreeChunk( gPause );
 	Mix_FreeChunk( gMedium );
@@ -1258,6 +1304,11 @@ void close()
 	gScratch = NULL;
 	gHigh = NULL;
 	gPlatypus = NULL;
+	gCandace= NULL;
+	gIsabella= NULL;
+	gVanessa= NULL;
+	gDog= NULL;
+	gYulu= NULL;
 	gEnergy = NULL;
 	gPause = NULL;
 	gMedium = NULL;
@@ -2128,7 +2179,7 @@ for(int i=0;i<11;i++){
 						else if( e.key.keysym.sym == SDLK_y and flag == 1 and yulu_in_use==0 and yulu_counter <4)
 						{
 							if(!checkCollisionAC(dot.mCollider, wall64) or !checkCollisionAC(dot.mCollider, wall65) or !checkCollisionAC(dot.mCollider, wall66) or !checkCollisionAC(dot.mCollider, wall67) or !checkCollisionAC(dot.mCollider, wall68) or !checkCollisionAC(dot.mCollider, wall69) or !checkCollisionAC(dot.mCollider, wall70) or !checkCollisionAC(dot.mCollider, wall71) or !checkCollisionAC(dot.mCollider, wall72) or !checkCollisionAC(dot.mCollider, wall73) ){
-							Mix_PlayChannel( -1, gHigh, 0 );
+							Mix_PlayChannel( -1, gYulu, 0 );
 							yuluStart = SDL_GetTicks();
 							y2times =1;
 							yulu_in_use =1;
@@ -2484,6 +2535,7 @@ for(int i=0;i<11;i++){
 				//dot.DOT_VEL-=3;
 				dot.life-=1;
 				// dot.mVelY-=3;
+				Mix_PlayChannel( -1, gDog, 0 );
 				cout<<dot.DOT_VEL<<" "<< dot.mVelX<<" " <<dot.mVelY<<" "<<endl;
 				dot.manshi = false;
 				}}
@@ -2503,6 +2555,7 @@ for(int i=0;i<11;i++){
 				if(dot.manshi3==1){
 				// cout<<dot.life<<":life ";
 				cout<<"candace:"<<dot.points;
+				Mix_PlayChannel( -1, gCandace, 0 );
 				dot.points+=1;//collision with candace increases 1 point
 				cout<<dot.points;
 				dot.manshi3 = 2;
@@ -2511,6 +2564,7 @@ for(int i=0;i<11;i++){
 				if(dot.manshi4==1){
 				// cout<<dot.life<<":life ";
 				cout<<"isabella:"<<dot.points;
+				Mix_PlayChannel( -1, gIsabella, 0 );
 				// dot.points+=1;//collision with candace increases 1 point
 				cout<<dot.points;
 				dot.manshi4 = 2;
@@ -2519,6 +2573,7 @@ for(int i=0;i<11;i++){
 				if(dot.manshi5==1){
 				// cout<<dot.life<<":life ";
 				cout<<"vanessa:"<<dot.points;
+				Mix_PlayChannel( -1, gVanessa, 0 );
 				dot.points+=1;//collision with vanessa increases 1 point
 				cout<<dot.points;
 				dot.manshi5 = 2;
@@ -2866,7 +2921,7 @@ for(int i=0;i<11;i++){
 				}
 				else if(yulu_in_use==1)
 				{
-				yululogo.render(64,4);
+				yululogo.render(64,48);
 				
 				}
 				//gYuluEndTexture.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
