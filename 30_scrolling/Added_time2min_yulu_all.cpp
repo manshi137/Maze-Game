@@ -452,9 +452,12 @@ Dot::Dot()
 {
     //Initialize the offsets
     //initial position
-    mPosX = 300*32;
-    mPosY = 57*32;
-    
+    // mPosX = 300*32;//gate1
+    // mPosY = 57*32;
+
+    mPosX = 21*32; //gate6
+    mPosY = 8*32;
+	
     //Set collision box dimension
 	mCollider.w = DOT_WIDTH;
 	mCollider.h = DOT_HEIGHT;
@@ -483,8 +486,8 @@ Ghost::Ghost(int x, int y)
 	
 
     //Initialize the velocity
-    ghostVelX = 1;
-    ghostVelY = 1;
+    ghostVelX = -5;
+    ghostVelY = -5;
     prevghostVelX=0;
     prevghostVelY=0;
 }
@@ -541,12 +544,12 @@ void Ghost::handleEvent( SDL_Event& e )
         //Adjust the velocity
         switch( e.key.keysym.sym )
         {
-            case SDLK_UP: ghostVelY = rand()%10 +3; break;
+            case SDLK_UP: ghostVelY = rand()%16 -8; break;
             
-            case SDLK_DOWN: ghostVelY = rand()%10 +3; break;
-            case SDLK_LEFT: ghostVelX = rand()%10 +3; break;
+            case SDLK_DOWN: ghostVelY = rand()%16 -8; break;
+            case SDLK_LEFT: ghostVelX = rand()%16 -8; break;
             
-            case SDLK_RIGHT: ghostVelX = rand()%10 +3; break;
+            case SDLK_RIGHT: ghostVelX = rand()%16 -8; break;
 
         }
     }
@@ -556,10 +559,10 @@ void Ghost::handleEvent( SDL_Event& e )
         //Adjust the velocity
         switch( e.key.keysym.sym )
         {
-            case SDLK_UP: ghostVelY =rand()%10 +3; break;
-            case SDLK_DOWN: ghostVelY = rand()%10 +3; break;
-            case SDLK_LEFT: ghostVelX = rand()%10 +3; break;
-            case SDLK_RIGHT: ghostVelX = rand()%10 +3; break;
+            case SDLK_UP: ghostVelY =rand()%16 -8; break;
+            case SDLK_DOWN: ghostVelY = rand()%16 -8; break;
+            case SDLK_LEFT: ghostVelX = rand()%16 -8; break;
+            case SDLK_RIGHT: ghostVelX = rand()%16 -8; break;
            
         }
     }
@@ -797,7 +800,7 @@ bool loadMedia()
 		SDL_Color textColor = { 0, 0, 0, 255 };
 		
 		//Load prompt texture
-		if( !gPromptTextTexture.loadFromRenderedText( "Press Enter to Reset Start Time.", textColor ) )
+		if( !gPromptTextTexture.loadFromRenderedText( "Press M to display Map", textColor ) )
 		{
 			printf( "Unable to render prompt texture!\n" );
 			success = false;
@@ -1523,15 +1526,18 @@ int main( int argc, char* args[] )
         return -1;
     } */
     //sockets end
+// int begin=rand()+1;
+
 int begin=rand();
 for(int i=0; i<5; i++){
 	// todotasks[i]=taskarray[(begin +4)%10];
 	todotasks[i]=(begin +4)%10;
-	cout<<(begin +4)%10<<" ";
+	cout<<(begin +4)%10<<":index ";
 	taskarray[(begin +4)%10].taskdoneonce=false;
+	cout<<taskarray[i].taskdoneonce<<":taskarray"<<endl;
 	taskarray[(begin +4)%10].dotask=true;
-
 	begin+=4;
+	cout<<begin<<endl;
 }
 
 
@@ -1580,13 +1586,14 @@ for(int i=0;i<11;i++){
 
 			//The dot that will be moving around on the screen
 			Dot dot;
-			Ghost doctor(255* 32-64,37* 32);
-			Ghost perry(280*32,57*32);
+			Ghost doctor(192* 32-64,57* 32);
+			Ghost perry(149*32,57*32);
 			Ghost candace(26*32,75*32);//candace in nalanda
 			Ghost isabella(266*32,84*32);//isabella in kailash
-			Ghost vanessa(294*32,84*32);//vanessa in himadri
+			Ghost vanessa(294*32,84*32-32);//vanessa in himadri
 
-			Ghost ghost2(21* 32,25* 32 -32);
+			Ghost ghost2(33* 32,99* 32 -32);
+
 			Ghost ghost3(114* 32,57* 32);
 			Ghost ghost4(150* 32,57* 32);
 			Ghost ghost1(46* 32,57* 32);
@@ -1887,14 +1894,14 @@ for(int i=0;i<11;i++){
 			wall49.w = 5*32;
 			wall49.h = 2*32 +32;
 			
-			SDL_Rect wall50;//kailash
-			wall50.x = 266* 32 -32;
-			wall50.y = 84*32 -32;
+			SDL_Rect wall50;//shivalik
+			wall50.x = 52* 32 -32;
+			wall50.y = 24*32 -32;
 			wall50.w = 2*32 +32;
 			wall50.h = 2*32 +32;
 			
-			SDL_Rect wall51;//himadri
-			wall51.x = 297* 32 -32;
+			SDL_Rect wall51;//nalanda
+			wall51.x = 20* 32 -32;
 			wall51.y = 84*32 -32;
 			wall51.w = 2*32 +32;
 			wall51.h = 2*32 +32;
@@ -2504,7 +2511,7 @@ for(int i=0;i<11;i++){
 				if(dot.manshi4==1){
 				// cout<<dot.life<<":life ";
 				cout<<"isabella:"<<dot.points;
-				dot.points+=1;//collision with candace increases 1 point
+				// dot.points+=1;//collision with candace increases 1 point
 				cout<<dot.points;
 				dot.manshi4 = 2;
 				}}
@@ -2517,15 +2524,15 @@ for(int i=0;i<11;i++){
 				dot.manshi5 = 2;
 				}}
 				if(dot.life==5){
-				lifeT5.render( 0,0);}
+				lifeT5.render( 0,0+48);}
 				else if(dot.life==2){
-				lifeT2.render( 0,0);}
+				lifeT2.render( 0,0+48);}
 				else if(dot.life==3){
-				lifeT3.render( 0,0);}
+				lifeT3.render( 0,0+48);}
 				else if(dot.life==4){
-				lifeT4.render( 0,0);}
+				lifeT4.render( 0,0+48);}
 				else {
-				lifeT1.render( 0,0);
+				lifeT1.render( 0,0+48);
 				if(alpha==0) {
 				Mix_PlayChannel( -1, gMedium, 0 );
 				ee= 255;
@@ -2800,42 +2807,42 @@ for(int i=0;i<11;i++){
 				else {dot.pointsupdated = false;}
 				//POINTS
 				if(dot.points>=1){
-				point1.render(0,4+64);}
+				point1.render(0,4+64+48);}
 				if(dot.points>=2){
-				point1.render(48,4+64);}
+				point1.render(48,4+64+48);}
 				if(dot.points>=3){
-				point1.render(48*2,4+64);}
+				point1.render(48*2,4+64+48);}
 				if(dot.points>=4){
-				point1.render(48*3,4+64);}
+				point1.render(48*3,4+64+48);}
 				if(dot.points>=5){
-				point1.render(48*4,4+64);}
+				point1.render(48*4,4+64+48);}
 				if(dot.points>=6){
-				point1.render(0,48+64);}
+				point1.render(0,48+64+48);}
 				if(dot.points>=7){
-				point1.render(48,48+64);}
+				point1.render(48,48+64+48);}
 				if(dot.points>=8){
-				point1.render(48*2,48+64);}
+				point1.render(48*2,48+64+48);}
 				if(dot.points>=9){
-				point1.render(48*3,48+64);}
+				point1.render(48*3,48+64+48);}
 				if(dot.points>=10){
-				point1.render(48*4,48+64);
+				point1.render(48*4,48+64+48);
 				win.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);//player wins
 				}
 
 			// LTexture taskarray[11]={task1,task2,task22,task3,task5,task61,task62,task63,task7,task8,task9};
 
 			for(int i=0;i<5;i++){
-				if(todotasks[i]==0){t1.render(0,64*2+64*i);}
-				if(todotasks[i]==1){t2.render(0,64*2+64*i);}
-				if(todotasks[i]==2){t2.render(0,64*2+64*i);}
-				if(todotasks[i]==3){t3.render(0,64*2+64*i);}
-				if(todotasks[i]==4){t5.render(0,64*2+64*i);}
-				if(todotasks[i]==5){t61.render(0,64*2+64*i);}
-				if(todotasks[i]==6){t62.render(0,64*2+64*i);}
-				if(todotasks[i]==7){t63.render(0,64*2+64*i);}
-				if(todotasks[i]==8){t7.render(0,64*2+64*i);}
-				if(todotasks[i]==9){t8.render(0,64*2+64*i);}
-				if(todotasks[i]==10){t9.render(0,64*2+64*i);}
+				if(todotasks[i]==0){t1.render(0,64*2+64*i+48);}
+				if(todotasks[i]==1){t2.render(0,64*2+64*i+48);}
+				if(todotasks[i]==2){t2.render(0,64*2+64*i+48);}
+				if(todotasks[i]==3){t3.render(0,64*2+64*i+48);}
+				if(todotasks[i]==4){t5.render(0,64*2+64*i+48);}
+				if(todotasks[i]==5){t61.render(0,64*2+64*i+48);}
+				if(todotasks[i]==6){t62.render(0,64*2+64*i+48);}
+				if(todotasks[i]==7){t63.render(0,64*2+64*i+48);}
+				if(todotasks[i]==8){t7.render(0,64*2+64*i+48);}
+				if(todotasks[i]==9){t8.render(0,64*2+64*i+48);}
+				if(todotasks[i]==10){t9.render(0,64*2+64*i+48);}
 	}
 				
 				if(SDL_GetTicks()-startTime > 120000)
@@ -2859,7 +2866,7 @@ for(int i=0;i<11;i++){
 				}
 				else if(yulu_in_use==1)
 				{
-				yululogo.render(0,120);
+				yululogo.render(64,4);
 				
 				}
 				//gYuluEndTexture.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
@@ -2867,7 +2874,7 @@ for(int i=0;i<11;i++){
 				gMapWindowTexture.render( 0, 0);
 				//Render textures
 				
-				gTimeTextTexture.render( 0,80);
+				gTimeTextTexture.render( 4,20);
 				
 				gMapWindowTexture.render( 0, 0);
 				
