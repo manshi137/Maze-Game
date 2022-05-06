@@ -72,8 +72,8 @@ class LTexture
 		int getWidth();
 		int getHeight();
 		bool isdone=false;
-		bool taskdoneonce=false;
-
+		bool taskdoneonce=true;
+		bool dotask=false;
 	private:
 		//The actual hardware texture
 		SDL_Texture* mTexture;
@@ -251,8 +251,14 @@ LTexture task8;
 LTexture task9;
 
 LTexture taskdone;
+LTexture notask;
 LTexture point1;
 LTexture player2;
+LTexture taskarray[11]={task1,task2,task22,task3,task5,task61,task62,task63,task7,task8,task9};
+// int begin = rand();
+LTexture todotasks[5];
+
+
 
 //The music that will be played
 Mix_Music *gMusic = NULL;
@@ -902,22 +908,26 @@ bool loadMedia()
 		printf( "Failed to load background texture!\n" );
 		success = false;
 	}
-	if( !task1.loadFromFile( "pics/task1.png" ) )
+	// if( !task1.loadFromFile( "pics/task1.png" ) )
+	if( !taskarray[0].loadFromFile( "pics/task1.png" ) )
 	{
 		printf( "Failed to load background texture!\n" );
 		success = false;
 	}
-	if( !task2.loadFromFile( "pics/task2.png" ) )
+	// if( !task2.loadFromFile( "pics/task2.png" ) )
+	if( !taskarray[1].loadFromFile( "pics/task2.png" ) )
 	{
 		printf( "Failed to load background texture!\n" );
 		success = false;
 	}
-	if( !task22.loadFromFile( "pics/task2.png" ) )
+	// if( !task22.loadFromFile( "pics/task2.png" ) )
+	if( !taskarray[2].loadFromFile( "pics/task2.png" ) )
  	{
  		printf( "Failed to load background texture!\n" );
  		success = false;
  	}
-	if( !task3.loadFromFile( "pics/task3.png" ) )
+	// if( !task3.loadFromFile( "pics/task3.png" ) )
+	if( !taskarray[3].loadFromFile( "pics/task3.png" ) )
 	{
 		printf( "Failed to load background texture!\n" );
 		success = false;
@@ -942,37 +952,44 @@ bool loadMedia()
 		printf( "Failed to load background texture!\n" );
 		success = false;
 	}
-	if( !task5.loadFromFile( "pics/task5.png" ) )
+	// if( !task5.loadFromFile( "pics/task5.png" ) )
+	if( !taskarray[4].loadFromFile( "pics/task5.png" ) )
 	{
 		printf( "Failed to load background texture!\n" );
 		success = false;
 	}
-	if( !task61.loadFromFile( "pics/task6.png" ) )
+	// if( !task61.loadFromFile( "pics/task6.png" ) )
+	if( !taskarray[5].loadFromFile( "pics/task6.png" ) )
 	{
 		printf( "Failed to load background texture!\n" );
 		success = false;
 	}
-	if( !task62.loadFromFile( "pics/task6.2.png" ) )
+	// if( !task62.loadFromFile( "pics/task6.2.png" ) )
+	if( !taskarray[6].loadFromFile( "pics/task6.2.png" ) )
 	{
 		printf( "Failed to load background texture!\n" );
 		success = false;
 	}
-	if( !task63.loadFromFile( "pics/task6.3.png" ) )
+	// if( !task63.loadFromFile( "pics/task6.3.png" ) )
+	if( !taskarray[7].loadFromFile( "pics/task6.3.png" ) )
 	{
 		printf( "Failed to load background texture!\n" );
 		success = false;
 	}
-	if( !task7.loadFromFile( "pics/task7.png" ) )
+	// if( !task7.loadFromFile( "pics/task7.png" ) )
+	if( !taskarray[8].loadFromFile( "pics/task7.png" ) )
 	{
 		printf( "Failed to load background texture!\n" );
 		success = false;
 	}
-	if( !task8.loadFromFile( "pics/task8.png" ) )
+	// if( !task8.loadFromFile( "pics/task8.png" ) )
+	if( !taskarray[9].loadFromFile( "pics/task8.png" ) )
 	{
 		printf( "Failed to load background texture!\n" );
 		success = false;
 	}
-	if( !task9.loadFromFile( "pics/task9.png" ) )
+	// if( !task9.loadFromFile( "pics/task9.png" ) )
+	if( !taskarray[10].loadFromFile( "pics/task9.png" ) )
 	{
 		printf( "Failed to load background texture!\n" );
 		success = false;
@@ -1005,17 +1022,21 @@ if( !yulu.loadFromFile( "pics/yulu.png" ) )
 		success = false;
 	}
 
-	if( !nocoins.loadFromFile( "pics/nocoins.png" ) )
+if( !nocoins.loadFromFile( "pics/nocoins.png" ) )
 	{
 		printf( "Failed to load background texture!\n" );
 		success = false;
 	}
-	if( !win.loadFromFile( "pics/win.png" ) )
+if( !win.loadFromFile( "pics/win.png" ) )
 	{
 		printf( "Failed to load background texture!\n" );
 		success = false;
 	}
-
+if( !notask.loadFromFile( "pics/notask.png" ) )
+	{
+		printf( "Failed to load background texture!\n" );
+		success = false;
+	}
 	return success;
 }
 
@@ -1060,7 +1081,7 @@ void close()
 	yulu.free();
 	nocoins.free();
 	win.free();
-	
+	notask.free();
 	//Free the sound effects
 	Mix_FreeChunk( gScratch );
 	Mix_FreeChunk( gHigh );
@@ -1337,8 +1358,21 @@ int main( int argc, char* args[] )
         return -1;
     } */
     //sockets end
+int begin=rand();
+for(int i=0; i<5; i++){
+	todotasks[i]=taskarray[(begin +4)%10];
+	cout<<(begin +4)%10<<" ";
+	taskarray[(begin +4)%10].taskdoneonce=false;
+	taskarray[(begin +4)%10].dotask=true;
+	
+	todotasks[i].taskdoneonce=false;
+	begin+=4;
+}
+cout<<endl;
+for(int i=0;i<11;i++){
+	cout<<taskarray[i].taskdoneonce<<" "<<taskarray[i].dotask<<endl;
 
-
+}
 	//Start up SDL and create window
 	if( !init() )
 	{
@@ -1823,8 +1857,8 @@ int main( int argc, char* args[] )
 			wall73.y = 10* 32 ;
 			wall73.w = 3* 32;
 			wall73.h = 4* 32 ;
-			
 
+			
 			
 			
 			//The camera area
@@ -1833,6 +1867,7 @@ int main( int argc, char* args[] )
 			int flag1=0;
 			int m2times =0;
 			int alpha=0;
+			// int begin =rand();
 			//Set default current surface
 			gDotTexture = gKeyPressSurfaces[ KEY_PRESS_SURFACE_DEFAULT ];
 
@@ -1840,6 +1875,7 @@ int main( int argc, char* args[] )
 			int ind1,ind2;
 			while( !quit )
 			{
+				
 				//Handle events on queue
 				while( SDL_PollEvent( &e ) != 0 )
 				{
@@ -1915,13 +1951,15 @@ int main( int argc, char* args[] )
 						{
 						//task1
 							if(!checkCollisionAC(dot.mCollider, wall49)){
-								if(!task1.taskdoneonce){
+								// if(!task1.taskdoneonce){
+								if(!taskarray[0].taskdoneonce){
+
 								dot.points+=1;
-								task1.taskdoneonce=true;
+								taskarray[0].taskdoneonce=true;
 								}
 							Mix_PlayChannel( -1, gHigh, 0 );
 							dot.pointsupdated=true;
-							task1.isdone=true;
+							taskarray[0].isdone=true;
 							//TASK COMPLETED
 							}
 						}
@@ -1929,23 +1967,25 @@ int main( int argc, char* args[] )
 						{
 						//task2
 							if(!checkCollisionAC(dot.mCollider, wall50)){
-								if(!task2.taskdoneonce){
+								// if(!task2.taskdoneonce){
+									if(!taskarray[1].taskdoneonce){
 								dot.points+=1;
-								task2.taskdoneonce=true;
+								taskarray[1].taskdoneonce=true;
 								}
 							Mix_PlayChannel( -1, gHigh, 0 );
 							dot.pointsupdated=true;
-							task2.isdone=true;
+							taskarray[1].isdone=true;
 							//TASK COMPLETED
 							}
 							else if(!checkCollisionAC(dot.mCollider, wall51)){
-								if(!task22.taskdoneonce){
+								// if(!task22.taskdoneonce){
+								if(!taskarray[2].taskdoneonce){
 								dot.points+=1;
-								task22.taskdoneonce=true;
+								taskarray[2].taskdoneonce=true;
 								}
 							Mix_PlayChannel( -1, gHigh, 0 );
 							dot.pointsupdated=true;
-							 task22.isdone=true;
+							taskarray[2].isdone=true;
 							//TASK COMPLETED
 							}
 						}	
@@ -1953,13 +1993,14 @@ int main( int argc, char* args[] )
 						{
 						//task3
 							if(!checkCollisionAC(dot.mCollider, wall52)){
-								if(!task3.taskdoneonce){
+								// if(!task3.taskdoneonce){
+									if(!taskarray[3].taskdoneonce){
 								dot.points+=1;
-								task3.taskdoneonce=true;
+								taskarray[3].taskdoneonce=true;
 								}
 							Mix_PlayChannel( -1, gHigh, 0 );
 							dot.pointsupdated=true;
-							task3.isdone=true;
+							taskarray[3].isdone=true;
 							//TASK COMPLETED
 							}
 						}
@@ -2016,13 +2057,14 @@ int main( int argc, char* args[] )
 						{
 						//task5
 							if(!checkCollisionAC(dot.mCollider, wall53)){
-								if(!task5.taskdoneonce){
+								// if(!task5.taskdoneonce){
+									if(!taskarray[4].taskdoneonce){
 								dot.points+=1;
-								task5.taskdoneonce=true;
+								taskarray[4].taskdoneonce=true;
 								}
 							Mix_PlayChannel( -1, gHigh, 0 );
 							dot.pointsupdated=true;
-							task5.isdone=true;
+							taskarray[4].isdone=true;
 							//TASK COMPLETED
 							}
 						}
@@ -2030,33 +2072,36 @@ int main( int argc, char* args[] )
 						{
 						//task6
 							if(!checkCollisionAC(dot.mCollider, wall61)){
-								if(!task61.taskdoneonce){
+								// if(!task61.taskdoneonce){
+									if(!taskarray[5].taskdoneonce){
 								dot.points+=1;
-								task61.taskdoneonce=true;
+								taskarray[5].taskdoneonce=true;
 								}
 							Mix_PlayChannel( -1, gHigh, 0 );
 							dot.pointsupdated=true;
-							task61.isdone=true;
+							taskarray[5].isdone=true;
 							//TASK COMPLETED
 							}
 							else if(!checkCollisionAC(dot.mCollider, wall62)){
-								if(!task62.taskdoneonce){
+								// if(!task62.taskdoneonce){
+									if(!taskarray[6].taskdoneonce){
 								dot.points+=1;
-								task62.taskdoneonce=true;
+								taskarray[6].taskdoneonce=true;
 								}
 							Mix_PlayChannel( -1, gHigh, 0 );
 							dot.pointsupdated=true;
-							task62.isdone=true;
+							taskarray[6].isdone=true;
 							//TASK COMPLETED
 							}
 							else if(!checkCollisionAC(dot.mCollider, wall60)){
-								if(!task63.taskdoneonce){
+								// if(!task63.taskdoneonce){
+									if(!taskarray[7].taskdoneonce){
 								dot.points+=1;
-								task63.taskdoneonce=true;
+								taskarray[7].taskdoneonce=true;
 								}
 							Mix_PlayChannel( -1, gHigh, 0 );
 							dot.pointsupdated=true;
-							task63.isdone=true;
+							taskarray[7].isdone=true;
 							//TASK COMPLETED
 							}
 						}
@@ -2064,13 +2109,14 @@ int main( int argc, char* args[] )
 						{
 						//task7
 							if(!checkCollisionAC(dot.mCollider, wall54)){
-								if(!task7.taskdoneonce){
+								// if(!task7.taskdoneonce){
+									if(!taskarray[8].taskdoneonce){
 								dot.points+=1;
-								task7.taskdoneonce=true;
+								taskarray[8].taskdoneonce=true;
 								}
 							Mix_PlayChannel( -1, gHigh, 0 );
 							dot.pointsupdated=true;
-							task7.isdone=true;
+							taskarray[8].isdone=true;
 							//TASK COMPLETED
 							}
 						}
@@ -2079,13 +2125,14 @@ int main( int argc, char* args[] )
 						{
 						//task8
 							if(!checkCollisionAC(dot.mCollider, wall55)){
-								if(!task8.taskdoneonce){
+								// if(!task8.taskdoneonce){
+									if(!taskarray[9].taskdoneonce){
 								dot.points+=1;
-								task8.taskdoneonce=true;
+								taskarray[9].taskdoneonce=true;
 								}
 							Mix_PlayChannel( -1, gHigh, 0 );
 							dot.pointsupdated=true;
-							task8.isdone=true;
+							taskarray[9].isdone=true;
 							//TASK COMPLETED
 							}
 						}
@@ -2093,13 +2140,14 @@ int main( int argc, char* args[] )
 						{
 						//task9
 							if(!checkCollisionAC(dot.mCollider, wall75)){
-								if(!task9.taskdoneonce){
+								// if(!task9.taskdoneonce){
+									if(!taskarray[10].taskdoneonce){
 								dot.points+=1;
-								task9.taskdoneonce=true;
+								taskarray[10].taskdoneonce=true;
 								}
 							Mix_PlayChannel( -1, gHigh, 0 );
 							dot.pointsupdated=true;
-							task9.isdone=true;
+							taskarray[10].isdone=true;
 							//TASK COMPLETED
 							}
 						}
@@ -2274,48 +2322,53 @@ int main( int argc, char* args[] )
 				
 				int counter=0;
 				//TASKS
-				if(!checkCollisionAC(dot.mCollider, wall49)){
-				task1.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
-				if((dot.pointsupdated || task1.isdone) ){
-				//cout<<"wall49 ";
+				if(!checkCollisionAC(dot.mCollider, wall49)&& ( taskarray[0].dotask)){
+					//task1
+				taskarray[0].render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
+				if((dot.pointsupdated || taskarray[0].isdone ) ){
 					taskdone.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
-					////cout<<"wall50done ";
-					}
-				
-				}
-				
-				else if(!checkCollisionAC(dot.mCollider, wall50)){
-				task2.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
-				if(dot.pointsupdated  or task2.isdone ){
-				//cout<<"wall50 ";
-					taskdone.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
-					//cout<<"wall50done ";
-					}
-				}
-				else if(!checkCollisionAC(dot.mCollider, wall51)){
-				task22.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
-				if(dot.pointsupdated or task22.isdone ){
-				//cout<<"wall51 ";
-					taskdone.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
-					////cout<<"wall50done ";
+					// if(! taskarray[0].dotask){
+					// 	notask.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
+					// }
 					}
 				}
 				
-				else if(!checkCollisionAC(dot.mCollider, wall52)){
-				task3.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
-				if(dot.pointsupdated or task3.isdone ){
-				//cout<<"wall52 ";
+				else if(!checkCollisionAC(dot.mCollider, wall50)&& ( taskarray[1].dotask)){
+					//task2
+				taskarray[1].render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
+				if(dot.pointsupdated  or taskarray[1].isdone ){
 					taskdone.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
-					////cout<<"wall50done ";
+					// if(! taskarray[1].dotask){
+					// 	notask.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
+					// }
+					}
+				}
+				else if(!checkCollisionAC(dot.mCollider, wall51) && ( taskarray[2].dotask)){
+				// task22
+				taskarray[2].render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
+				if(dot.pointsupdated or taskarray[2].isdone ){
+					taskdone.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
+					// if(! taskarray[2].dotask){
+					// 	notask.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
+					// }
+					}
+				}
+				
+				else if(!checkCollisionAC(dot.mCollider, wall52)&& ( taskarray[3].dotask)){
+				// task3
+				taskarray[3].render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
+				if(dot.pointsupdated or taskarray[3].isdone ){
+					taskdone.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
+					// if( !taskarray[2].dotask){
+					// 	notask.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
+					// }
 					}
 				}
 				
 				else if(!checkCollisionAC(dot.mCollider, wall56)){//amul
 				task41.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
 				if(dot.pointsupdated or task41.isdone ){
-				//cout<<"wall56 ";
 					taskdone.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
-					////cout<<"wall50done ";
 					if(dot.points<0){
 					nocoins.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
 					dot.points+=1;
@@ -2325,9 +2378,7 @@ int main( int argc, char* args[] )
 				else if(!checkCollisionAC(dot.mCollider, wall57)){
 				task43.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
 				if(dot.pointsupdated or task43.isdone ){
-				//cout<<"wall57 ";
 					taskdone.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
-					////cout<<"wall50done ";
 					if(dot.points<0){
 					nocoins.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
 					dot.points+=1;
@@ -2337,9 +2388,7 @@ int main( int argc, char* args[] )
 				else if(!checkCollisionAC(dot.mCollider, wall58)){//d16
 				task44.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
 				if(dot.pointsupdated or task44.isdone ){
-				//cout<<"wall58 ";
 					taskdone.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
-					////cout<<"wall50done ";
 					if(dot.points<0){
 					nocoins.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
 					dot.points+=1;
@@ -2349,9 +2398,7 @@ int main( int argc, char* args[] )
 				else if(!checkCollisionAC(dot.mCollider, wall59)){//masala mix
 				task42.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
 				if(dot.pointsupdated or task42.isdone ){
-				//cout<<"wall59 ";
 					taskdone.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
-					////cout<<"wall50done ";
 					if(dot.points<0){
 					nocoins.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
 					dot.points+=1;
@@ -2360,70 +2407,83 @@ int main( int argc, char* args[] )
 					}
 				}
 				
-				else if(!checkCollisionAC(dot.mCollider, wall53)){
-				task5.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
-				if(dot.pointsupdated or task5.isdone ){
-				//cout<<"wall53 ";
+				else if(!checkCollisionAC(dot.mCollider, wall53)&& ( taskarray[4].dotask)){
+				// task5
+				taskarray[4].render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
+				if(dot.pointsupdated or taskarray[4].isdone ){
 					taskdone.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
-					////cout<<"wall50done ";
+					// if( !taskarray[4].dotask){
+					// 	notask.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
+					// }
 					}
 				}
-				else if(!checkCollisionAC(dot.mCollider, wall61)){
-				task61.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
-				if(dot.pointsupdated or task61.isdone ){
-				//cout<<"wall61 ";
+				else if(!checkCollisionAC(dot.mCollider, wall61)&& ( taskarray[5].dotask)){
+				// task61
+				taskarray[5].render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
+				if(dot.pointsupdated or taskarray[5].isdone ){
 					taskdone.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
-					////cout<<"wall50done ";
+					// if( !taskarray[5].dotask){
+					// 	notask.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
+					// }
 					}
 				}
-				else if(!checkCollisionAC(dot.mCollider, wall62)){
-				task62.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
-				if(dot.pointsupdated or task62.isdone ){
-				//cout<<"wall62 ";
+				else if(!checkCollisionAC(dot.mCollider, wall62)&& ( taskarray[6].dotask)){
+				// task62
+				taskarray[6].render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
+				if(dot.pointsupdated or taskarray[6].isdone ){
 					taskdone.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
-					////cout<<"wall50done ";
+					// if( !taskarray[6].dotask){
+					// 	notask.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
+					// }
 					}
 				
 				}
-				else if(!checkCollisionAC(dot.mCollider, wall60)){
-				task63.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
-				if(dot.pointsupdated or task63.isdone ){
-				//cout<<"wall60 ";
+				else if(!checkCollisionAC(dot.mCollider, wall60)&& ( taskarray[7].dotask)){
+				// task63
+				taskarray[7].render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
+				if(dot.pointsupdated or taskarray[7].isdone ){
 					taskdone.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
-					////cout<<"wall50done ";
+					// if(! taskarray[7].dotask){
+					// 	notask.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
+					// }
 					}
 				}
 				
-				else if(!checkCollisionAC(dot.mCollider, wall54)){
-				task7.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
-				if(dot.pointsupdated or task7.isdone ){
-				//cout<<"wall54 ";
+				else if(!checkCollisionAC(dot.mCollider, wall54)&& ( taskarray[8].dotask)){
+				// task7
+				taskarray[8].render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
+				if(dot.pointsupdated or taskarray[8].isdone ){
 					taskdone.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
-					////cout<<"wall50done ";
+					// if( !taskarray[8].dotask){
+					// 	notask.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
+					// }
 					}
 				}
 				
-				else if(!checkCollisionAC(dot.mCollider, wall55)){
-				task8.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
-				if(dot.pointsupdated or task8.isdone ){
-				//cout<<"wall55 ";
+				else if(!checkCollisionAC(dot.mCollider, wall55)&& ( taskarray[9].dotask)){
+				// task8
+				taskarray[9].render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
+				if(dot.pointsupdated or taskarray[9].isdone ){
 					taskdone.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
-					////cout<<"wall50done ";
+					// if(! taskarray[9].dotask){
+					// 	notask.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
+					// }
 					}
 				}
-				else if(!checkCollisionAC(dot.mCollider, wall75)){
-				task9.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
-				if(dot.pointsupdated or task9.isdone ){
-				//cout<<"wall55 ";
+				else if(!checkCollisionAC(dot.mCollider, wall75)&& ( taskarray[10].dotask)){
+				// task9
+				taskarray[10].render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
+				if(dot.pointsupdated or taskarray[10].isdone ){
 					taskdone.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
-					////cout<<"wall50done ";
+					// if(! taskarray[10].dotask){
+					// 	notask.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
+					// }
 					}
 				}
 				else if(!checkCollisionAC(dot.mCollider, wall63)){
 				oops.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
 				dot.points=0;
 				if(dot.pointsupdated){
-				//cout<<"wall63 ";
 					taskdone.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
 					
 					}
@@ -2503,25 +2563,25 @@ int main( int argc, char* args[] )
 				else {dot.pointsupdated = false;}
 				//POINTS
 				if(dot.points>=1){
-				point1.render(SCREEN_WIDTH - 48,4);}
+				point1.render(0,4+64);}
 				if(dot.points>=2){
-				point1.render(SCREEN_WIDTH - 48*2,4);}
+				point1.render(48,4+64);}
 				if(dot.points>=3){
-				point1.render(SCREEN_WIDTH - 48*3,4);}
+				point1.render(48*2,4+64);}
 				if(dot.points>=4){
-				point1.render(SCREEN_WIDTH - 48*4,4);}
+				point1.render(48*3,4+64);}
 				if(dot.points>=5){
-				point1.render(SCREEN_WIDTH - 48*5,4);}
+				point1.render(48*4,4+64);}
 				if(dot.points>=6){
-				point1.render(SCREEN_WIDTH - 48,48);}
+				point1.render(0,48+64);}
 				if(dot.points>=7){
-				point1.render(SCREEN_WIDTH - 48*2,48);}
+				point1.render(48,48+64);}
 				if(dot.points>=8){
-				point1.render(SCREEN_WIDTH - 48*3,48);}
+				point1.render(48*2,48+64);}
 				if(dot.points>=9){
-				point1.render(SCREEN_WIDTH - 48*4,48);}
+				point1.render(48*3,48+64);}
 				if(dot.points>=10){
-				point1.render(SCREEN_WIDTH - 48*5,48);
+				point1.render(48*4,48+64);
 				win.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);//player wins
 				}
 				gMapWindowTexture.render( 0, 0);
