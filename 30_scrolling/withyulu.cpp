@@ -119,6 +119,9 @@ class Dot
 		bool pointsupdated = false;
 		bool manshi=true; // true means no collision
 		int manshi2=1;
+		int manshi3=1;
+		int manshi4=1;
+		int manshi5=1;
 		//false means collision
 		
 		void startVel();
@@ -215,6 +218,10 @@ LTexture gDotTexture;
 LTexture ghostTexture1;
 LTexture ghostTexture2;
 LTexture ghostTexture3;
+LTexture candaceTexture;
+LTexture isabellaTexture;
+LTexture vanessaTexture;
+
 
 LTexture gBGTexture;
 LTexture gPauseTexture;
@@ -558,7 +565,6 @@ mCollider.x = mPosX;
         //Move back
         mPosX -= mVelX;
         mCollider.x = mPosX;
-		cout<<"&&";
     }
 
     //Move the dot up or down
@@ -571,7 +577,6 @@ mCollider.x = mPosX;
         //Move back
         mPosY -= mVelY;
         mCollider.y = mPosY;
-		cout<<"%%";
     }
     if( !checkCollisionAC(mCollider, ghostCollider)){
     mPosX= 306	* 32;	
@@ -631,10 +636,19 @@ void Ghost::render( int camX, int camY,int isDoc )
 	ghostTexture1.render( ghostPosX - camX, ghostPosY - camY );}
 	else if(isDoc==0){//render dog
 	ghostTexture2.render( ghostPosX - camX, ghostPosY - camY );}
-	else{
+	else if(isDoc==2){
 	ghostTexture3.render( ghostPosX - camX, ghostPosY - camY );}
-	}
-
+	
+	else if(isDoc==3){
+	candaceTexture.render( ghostPosX - camX, ghostPosY - camY );}
+	
+	else if(isDoc==4){
+	isabellaTexture.render( ghostPosX - camX, ghostPosY - camY );}
+	
+	else if(isDoc==5){
+	vanessaTexture.render( ghostPosX - camX, ghostPosY - camY );}
+	
+}
 //===========
 
 void Dot::stopVel()
@@ -884,7 +898,21 @@ bool loadMedia()
 		printf( "Failed to load dog texture!\n" );
 		success = false;
 	}
-
+	if( !candaceTexture.loadFromFile( "pics/candace.png" ) )
+	{
+		printf( "Failed to load dog texture!\n" );
+		success = false;
+	}
+	if( !isabellaTexture.loadFromFile( "pics/isabella.png" ) )
+	{
+		printf( "Failed to load dog texture!\n" );
+		success = false;
+	}
+	if( !vanessaTexture.loadFromFile( "pics/vanessa.png" ) )
+	{
+		printf( "Failed to load dog texture!\n" );
+		success = false;
+	}
 	//Load background texture
 	if( !gBGTexture.loadFromFile( "pics/map.png" ) )
 	{
@@ -1105,6 +1133,9 @@ void close()
 	ghostTexture1.free();
 	ghostTexture2.free();
 	ghostTexture3.free();
+	candaceTexture.free();
+	isabellaTexture.free();
+	vanessaTexture.free();
 
 	gBGTexture.free();
 	gMapWindowTexture.free();
@@ -1475,7 +1506,10 @@ for(int i=0;i<11;i++){
 			Dot dot;
 			Ghost doctor(255* 32-64,37* 32);
 			Ghost perry(280*32,57*32);
-			
+			Ghost candace(26*32,75*32);//candace in nalanda
+			Ghost isabella(266*32,84*32);//isabella in kailash
+			Ghost vanessa(294*32,84*32);//vanessa in himadri
+
 			Ghost ghost2(21* 32,25* 32 -32);
 			Ghost ghost3(114* 32,57* 32);
 			Ghost ghost4(150* 32,57* 32);
@@ -1574,9 +1608,9 @@ for(int i=0;i<11;i++){
 			wall15.h = 2* 32 +32;
 			
 			SDL_Rect wall16;
-			wall16.x = 22* 32;
+			wall16.x = 24* 32;
 			wall16.y = 76* 32-64;
-			wall16.w = 8* 32;
+			wall16.w = 4* 32;
 			wall16.h = 1* 32+64;
 			
 			SDL_Rect wall17;
@@ -2243,6 +2277,9 @@ for(int i=0;i<11;i++){
 					ghost2.handleEvent( e);
 					ghost3.handleEvent( e);
 					perry.handleEvent( e);
+					candace.handleEvent( e);
+					isabella.handleEvent( e);
+					vanessa.handleEvent( e);
 					ghost1.handleEvent( e);
 					ghost4.handleEvent( e);
 					ghost5.handleEvent( e);
@@ -2253,7 +2290,10 @@ for(int i=0;i<11;i++){
 				//Move the dot and check collision
 				SDL_Rect wallarray[73]={wall1, wall2, wall3, wall4, wall5, wall6, wall7, wall8, wall9, wall10, wall11, wall12, wall13, wall14, wall15, wall16, wall17, wall18, wall19, wall20, wall21, wall22, wall23, wall24, wall25, wall26, wall27, wall28, wall29, wall30, wall31, wall32, wall33, wall34, wall35, wall36, wall37, wall38, wall39, wall40, wall41, wall42, wall43, wall44, wall45, wall46, wall47, wall48,wall49,wall50,wall51,wall52,wall53, wall54,wall55 ,wall56, wall57, wall58, wall59, wall60, wall61, wall62, wall63,wall64, wall65, wall66, wall67, wall68, wall69, wall70, wall71, wall72, wall73};
 				// int walltaskdone[74]={0};
-				
+				SDL_Rect candacearray[1]={wall16};
+				SDL_Rect isabellaarray[1]={wall50};
+				SDL_Rect vanessaarray[1]={wall51};
+
 				/*for(int i=0;i<2;i++){
 				dot.move( wallarray ,48,ghostarray[i].ghostCollider );}*/
 				
@@ -2264,6 +2304,10 @@ for(int i=0;i<11;i++){
 				ghost3.move(wallarray, 63);
 
 				perry.move(wallarray, 63);
+				candace.move(candacearray,1);//nalanda
+				isabella.move(isabellaarray,1);//kailash
+				vanessa.move(vanessaarray,1);//himadri
+
 				ghost1.move(wallarray, 63);
 				ghost4.move(wallarray, 63);
 				ghost5.move(wallarray, 63);
@@ -2343,15 +2387,38 @@ for(int i=0;i<11;i++){
 				else{
 				dot.manshi = true;}
 
-				//manshi2 =1 means it has not collided with perry yet , manshi2=2 means it has collided with perry alrady and got points
+				//manshi 2 =1 means it has not collided with perry yet , manshi 2=2 means it has collided with perry alrady and got points
 				if(!(checkCollisionAC(dot.mCollider,perry.ghostCollider)) ){
 				if(dot.manshi2==1){
-				cout<<dot.life<<":life ";
+				// cout<<dot.life<<":life ";
 				
 				dot.points+=2;
 				dot.manshi2 = 2;
 				}}
-				
+				if(!(checkCollisionAC(dot.mCollider,candace.ghostCollider)) ){
+				if(dot.manshi3==1){
+				// cout<<dot.life<<":life ";
+				cout<<"candace:"<<dot.points;
+				dot.points+=1;//collision with candace increases 1 point
+				cout<<dot.points;
+				dot.manshi3 = 2;
+				}}
+				if(!(checkCollisionAC(dot.mCollider,isabella.ghostCollider)) ){
+				if(dot.manshi4==1){
+				// cout<<dot.life<<":life ";
+				cout<<"isabella:"<<dot.points;
+				dot.points+=1;//collision with candace increases 1 point
+				cout<<dot.points;
+				dot.manshi4 = 2;
+				}}
+				if(!(checkCollisionAC(dot.mCollider,vanessa.ghostCollider)) ){
+				if(dot.manshi5==1){
+				// cout<<dot.life<<":life ";
+				cout<<"vanessa:"<<dot.points;
+				dot.points+=1;//collision with vanessa increases 1 point
+				cout<<dot.points;
+				dot.manshi5 = 2;
+				}}
 				if(dot.life==5){
 				lifeT5.render( 0,0);}
 				else if(dot.life==2){
@@ -2381,7 +2448,10 @@ for(int i=0;i<11;i++){
 				dot.render( camera.x, camera.y );
 				doctor.render( camera.x, camera.y,1 );
 				perry.render( camera.x, camera.y,2);
-
+				candace.render( camera.x, camera.y,3);
+				isabella.render( camera.x, camera.y,4);
+				vanessa.render( camera.x, camera.y , 5);
+			
 				ghost2.render( camera.x, camera.y,0 );
 				ghost3.render( camera.x, camera.y,0 );
 				ghost1.render( camera.x, camera.y,0 );
