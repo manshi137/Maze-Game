@@ -2050,7 +2050,8 @@ for(int i=0;i<11;i++){
 			int song_only1=0;
 			int y2times =0;
 			int end_screen1=0;
-			int yulu_in_use=0; 
+			int yulu_in_use=0;
+			int yulu_counter=0; 
 			// int begin =rand();
 			//Set default current surface
 			gDotTexture = gKeyPressSurfaces[ KEY_PRESS_SURFACE_DEFAULT ];
@@ -2117,7 +2118,7 @@ for(int i=0;i<11;i++){
 							m2times=1;
 						}
 						
-						else if( e.key.keysym.sym == SDLK_y and flag == 1 and yulu_in_use==0)
+						else if( e.key.keysym.sym == SDLK_y and flag == 1 and yulu_in_use==0 and yulu_counter <4)
 						{
 							if(!checkCollisionAC(dot.mCollider, wall64) or !checkCollisionAC(dot.mCollider, wall65) or !checkCollisionAC(dot.mCollider, wall66) or !checkCollisionAC(dot.mCollider, wall67) or !checkCollisionAC(dot.mCollider, wall68) or !checkCollisionAC(dot.mCollider, wall69) or !checkCollisionAC(dot.mCollider, wall70) or !checkCollisionAC(dot.mCollider, wall71) or !checkCollisionAC(dot.mCollider, wall72) or !checkCollisionAC(dot.mCollider, wall73) ){
 							Mix_PlayChannel( -1, gHigh, 0 );
@@ -2125,6 +2126,7 @@ for(int i=0;i<11;i++){
 							y2times =1;
 							yulu_in_use =1;
 							end_screen1=0;
+							yulu_counter++;
 							}
 						}
 						
@@ -2723,70 +2725,70 @@ for(int i=0;i<11;i++){
 					
 					}
 				}
-				else if(!checkCollisionAC(dot.mCollider, wall64)){
+				else if(!checkCollisionAC(dot.mCollider, wall64) and yulu_in_use==0 and yulu_counter<4 ){
 				yulu.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
 				if(dot.pointsupdated){
 					taskdone.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
 					
 					}
 				}
-				else if(!checkCollisionAC(dot.mCollider, wall65)){
+				else if(!checkCollisionAC(dot.mCollider, wall65) and yulu_in_use==0 and yulu_counter<4){
 				yulu.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
 				if(dot.pointsupdated){
 					taskdone.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
 					
 					}
 				}
-				else if(!checkCollisionAC(dot.mCollider, wall66)){
+				else if(!checkCollisionAC(dot.mCollider, wall66) and yulu_in_use==0 and yulu_counter<4){
 				yulu.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
 				if(dot.pointsupdated){
 					taskdone.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
 					
 					}
 				}
-				else if(!checkCollisionAC(dot.mCollider, wall67)){
+				else if(!checkCollisionAC(dot.mCollider, wall67) and yulu_in_use==0 and yulu_counter<4){
 				yulu.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
 				if(dot.pointsupdated){
 					taskdone.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
 					
 					}
 				}
-				else if(!checkCollisionAC(dot.mCollider, wall68)){
+				else if(!checkCollisionAC(dot.mCollider, wall68) and yulu_in_use==0 and yulu_counter<4){
 				yulu.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
 				if(dot.pointsupdated){
 					taskdone.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
 					
 					}
 				}
-				else if(!checkCollisionAC(dot.mCollider, wall69)){
+				else if(!checkCollisionAC(dot.mCollider, wall69) and yulu_in_use==0 and yulu_counter<4){
 				yulu.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
 				if(dot.pointsupdated){
 					taskdone.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
 					
 					}
 				}
-				else if(!checkCollisionAC(dot.mCollider, wall70)){
+				else if(!checkCollisionAC(dot.mCollider, wall70) and yulu_in_use==0 and yulu_counter<4){
 				yulu.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
 				if(dot.pointsupdated){
 					taskdone.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
 					
 					}
 				}
-				else if(!checkCollisionAC(dot.mCollider, wall71)){
+				else if(!checkCollisionAC(dot.mCollider, wall71) and yulu_in_use==0 and yulu_counter<4){
 				yulu.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
 				if(dot.pointsupdated){
 					taskdone.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
 					
 					}
 				}
-				else if(!checkCollisionAC(dot.mCollider, wall72)){
+				else if(!checkCollisionAC(dot.mCollider, wall72) and yulu_in_use==0 and yulu_counter<4){
 				yulu.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
 				if(dot.pointsupdated){
 					taskdone.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
 					
 					}
 				}
-				else if(!checkCollisionAC(dot.mCollider, wall73)){
+				else if(!checkCollisionAC(dot.mCollider, wall73) and yulu_in_use==0 and yulu_counter<4){
 				yulu.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
 				if(dot.pointsupdated){
 					taskdone.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);
