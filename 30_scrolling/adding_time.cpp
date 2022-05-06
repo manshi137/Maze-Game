@@ -104,7 +104,7 @@ class Dot
 		Dot();
 
 		//Takes key presses and adjusts the dot's velocity
-		void handleEvent( SDL_Event& e , int m2times);
+		void handleEvent( SDL_Event& e , int m2times, int yulu_stop);
 
 		//Moves the dot and checks collision
 		void move( SDL_Rect wall[] , int length1, SDL_Rect ghostCollider);
@@ -477,8 +477,10 @@ Ghost::Ghost(int x, int y)
     prevghostVelY=0;
 }
 //========
-void Dot::handleEvent( SDL_Event& e , int m2times)
+int flag_onlyonce =0;
+void Dot::handleEvent( SDL_Event& e , int m2times, int yulu_stop)
 {
+
     //If a key was pressed
 	if( e.type == SDL_KEYDOWN && e.key.repeat == 0 )
     {
@@ -498,28 +500,106 @@ void Dot::handleEvent( SDL_Event& e , int m2times)
             case SDLK_y: DOT_VEL =30; break; //yulu increases speed by 10
             case SDLK_w: DOT_VEL= 0;break;
             case SDLK_s: DOT_VEL= 25;break;
-            case SDLK_UP: mVelY -= DOT_VEL;cout<< "when up is pressed"<<endl; break;
-            case SDLK_DOWN: mVelY += DOT_VEL;cout<< "when down is pressed"<<endl; break;
-            case SDLK_LEFT: mVelX -= DOT_VEL;cout<< "when left is pressed"<<endl; break;
-            case SDLK_RIGHT: mVelX += DOT_VEL;cout<< "when right is pressed"<<endl; break;
+            case SDLK_UP: 
+             if(yulu_stop==1 and flag_onlyonce==0)
+            {
+            mVelX=0;
+            mVelY=0;
+            cout<<"!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"<<endl;
+            yulu_stop=0;
+            flag_onlyonce=1;
+            }
+            else
+            {mVelY -= DOT_VEL;}cout<< "when up is pressed"<<endl; break;
+            case SDLK_DOWN: 
+            if(yulu_stop==1 and flag_onlyonce==0)
+            { mVelX=0;
+            mVelY=0;
+            cout<<"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"<<endl;
+            yulu_stop=0;
+            flag_onlyonce=1;
+            }
+            else
+            {mVelY += DOT_VEL;}cout<< "when down is pressed"<<endl; break;
+            case SDLK_LEFT:
+            if(yulu_stop==1 and flag_onlyonce==0)
+            {
+            mVelX=0;
+            mVelY=0;
+            cout<<"#############################################"<<endl;
+            yulu_stop=0;
+            flag_onlyonce=1;
+            }
+            else
+            { mVelX -= DOT_VEL;}cout<< "when left is pressed"<<endl; break;
+            case SDLK_RIGHT:
+            if(yulu_stop==1 and flag_onlyonce==0)
+            {
+            mVelX=0;
+            mVelY=0;
+            cout<< "$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$"<<endl;
+            yulu_stop=0;
+            flag_onlyonce=1;
+            }
+            else
+            { mVelX += DOT_VEL;}cout<< "when right is pressed"<<endl; break;
         }
     }
     //If a key was released
     else if( e.type == SDL_KEYUP && e.key.repeat == 0 )
     {
+    cout<<"flag_onlyonce"<<flag_onlyonce<<endl;
         //Adjust the velocity
         switch( e.key.keysym.sym )
         {
             case SDLK_y: DOT_VEL =30; break; //yulu increases speed by 10
             case SDLK_w: DOT_VEL= 0;break;
             case SDLK_s: DOT_VEL= 25;break;
-            case SDLK_UP: mVelY += DOT_VEL; 
-            cout<< "when up is released"<<endl;
-            break;
-            case SDLK_DOWN: mVelY -= DOT_VEL; cout<< "when down is released"<<endl; break;
+            case SDLK_UP: 
+            if(yulu_stop==1 and flag_onlyonce==0)
+            {
+            mVelX=0;
+            mVelY=0;
+            cout<<"!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"<<endl;
+            yulu_stop=0;
+            flag_onlyonce=1;
+            }
+            else
+            {mVelY += DOT_VEL; }break;
+            case SDLK_DOWN: 
+             if(yulu_stop==1 and flag_onlyonce==0)
+            {
+            mVelX=0;
+            mVelY=0;
+            cout<<"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"<<endl;
+            yulu_stop=0;
+            flag_onlyonce=1;
+            }
+            else
+            {mVelY -= DOT_VEL;} cout<< "when down is released"<<endl; break;
             
-            case SDLK_LEFT: mVelX += DOT_VEL; cout<< "when left is released"<<endl; break;
-            case SDLK_RIGHT: mVelX -= DOT_VEL;cout<< "when right is released"<<endl;  break;
+            case SDLK_LEFT:
+             if(yulu_stop==1 and flag_onlyonce==0)
+            {
+            mVelX=0;
+            mVelY=0;
+            cout<<"#############################################"<<endl;
+            yulu_stop=0;
+            flag_onlyonce=1;
+            }
+            else
+            { mVelX += DOT_VEL;} cout<< "when left is released"<<endl; break;
+            case SDLK_RIGHT: 
+             if(yulu_stop==1 and flag_onlyonce==0)
+            {
+            mVelX=0;
+            mVelY=0;
+            cout<< "$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$"<<endl;
+            yulu_stop=0;
+            flag_onlyonce=1;
+            }
+            else
+            {mVelX -= DOT_VEL;}cout<< "when right is released"<<endl;  break;
         }
     }
 }
@@ -1871,6 +1951,8 @@ int main( int argc, char* args[] )
 			int song_only1=0;
 			int yulu_use =0;
 			int yulu_end_vel0=0;
+			int yulu_end_vel01=0;
+			int yulu_stop=0;
 			//Set default current surface
 			gDotTexture = gKeyPressSurfaces[ KEY_PRESS_SURFACE_DEFAULT ];
 
@@ -2127,7 +2209,7 @@ int main( int argc, char* args[] )
 					}
 				if(flag==1){
 					//Handle input for the dot
-					dot.handleEvent( e, m2times );
+					dot.handleEvent( e, m2times, yulu_stop );
 					doctor.handleEvent( e);
 					ghost2.handleEvent( e);
 					ghost3.handleEvent( e);
@@ -2219,6 +2301,8 @@ int main( int argc, char* args[] )
 				//Render background
 				gBGTexture.render( 0, 0, &camera );
 				
+				cout<< "yulu_use**"<< yulu_use<< endl;
+				cout<<"yulu_stop-----------------"<<yulu_stop<< endl;
 				if(yulu_use==1)
 				{
 				//cout<<"Usinggggggg";
@@ -2484,10 +2568,20 @@ int main( int argc, char* args[] )
 				yulu_use =0;
 				dot.stopYulu();
 				//dot.DOT_VEL =25;
-				//dot.mVelX=0;
-				//dot.mVelY=0;
+				dot.mVelX=0;
+				dot.mVelY=0;
 				yulu_end_vel0 =1;
+				yulu_stop=1;
+				//dot.handleEvent(e, m2times);
 				}
+				
+			//	if(yuluStart + 10000 < SDL_GetTicks() and yulu_end_vel01==0)
+			//	{
+			//	yulu_use =0;
+			//	dot.stopYulu();
+			//	yulu_end_vel01 =1;
+			//	}
+				
 				
 				
 				gPromptTextTexture.render( ( SCREEN_WIDTH - gPromptTextTexture.getWidth() ) / 2, 0 );
@@ -2515,4 +2609,3 @@ int main( int argc, char* args[] )
 
 	return 0;
 }
-
