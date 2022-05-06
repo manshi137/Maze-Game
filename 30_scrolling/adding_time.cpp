@@ -495,7 +495,7 @@ void Dot::handleEvent( SDL_Event& e , int m2times)
             		DOT_VEL= 25;
             		break;
             		}
-            case SDLK_y: DOT_VEL =0; break; //yulu increases speed by 10
+            case SDLK_y: DOT_VEL =30; break; //yulu increases speed by 10
             case SDLK_w: DOT_VEL= 0;break;
             case SDLK_s: DOT_VEL= 25;break;
             case SDLK_UP: mVelY -= DOT_VEL;cout<< "when up is pressed"<<endl; break;
@@ -510,7 +510,7 @@ void Dot::handleEvent( SDL_Event& e , int m2times)
         //Adjust the velocity
         switch( e.key.keysym.sym )
         {
-            case SDLK_y: DOT_VEL =0; break; //yulu increases speed by 10
+            case SDLK_y: DOT_VEL =30; break; //yulu increases speed by 10
             case SDLK_w: DOT_VEL= 0;break;
             case SDLK_s: DOT_VEL= 25;break;
             case SDLK_UP: mVelY += DOT_VEL; 
@@ -660,11 +660,13 @@ void Ghost::render( int camX, int camY,int isDoc )
 
 void Dot::startYulu()
 {
-DOT_VEL=0;
+DOT_VEL=30;
 }
 void Dot::stopYulu()
 {
 DOT_VEL=25;
+mVelX=0;
+mVelY=0;
 }
 void Dot::stopVel()
 {
