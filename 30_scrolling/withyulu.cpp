@@ -233,22 +233,30 @@ LTexture lifeT3;
 LTexture lifeT4;
 LTexture lifeT5;
 LTexture task1;
+LTexture t1;
 LTexture task2;
+LTexture t2;
 LTexture task22;
 LTexture task3;
+LTexture t3;
 LTexture task41;
-
 LTexture task42;
 LTexture task43;
 LTexture task44;
 LTexture task5;
+LTexture t5;
 LTexture task61;
+LTexture t61;
 LTexture task62;
+LTexture t62;
 LTexture task63;
-
+LTexture t63;
 LTexture task7;
+LTexture t7;
 LTexture task8;
+LTexture t8;
 LTexture task9;
+LTexture t9;
 
 LTexture taskdone;
 LTexture notask;
@@ -256,7 +264,7 @@ LTexture point1;
 LTexture player2;
 LTexture taskarray[11]={task1,task2,task22,task3,task5,task61,task62,task63,task7,task8,task9};
 // int begin = rand();
-LTexture todotasks[5];
+int todotasks[5];
 
 
 
@@ -1037,6 +1045,56 @@ if( !notask.loadFromFile( "pics/notask.png" ) )
 		printf( "Failed to load background texture!\n" );
 		success = false;
 	}
+if( !t1.loadFromFile( "pics/attend1.png" ) )
+	{
+		printf( "Failed to load background texture!\n" );
+		success = false;
+	}
+if( !t2.loadFromFile( "pics/food.png" ) )
+	{
+		printf( "Failed to load background texture!\n" );
+		success = false;
+	}
+if( !t3.loadFromFile( "pics/book3.png" ) )
+	{
+		printf( "Failed to load background texture!\n" );
+		success = false;
+	}
+if( !t5.loadFromFile( "pics/gym5.png" ) )
+	{
+		printf( "Failed to load background texture!\n" );
+		success = false;
+	}
+if( !t61.loadFromFile( "pics/cricket6.png" ) )
+	{
+		printf( "Failed to load background texture!\n" );
+		success = false;
+	}
+if( !t62.loadFromFile( "pics/hockey62.png" ) )
+	{
+		printf( "Failed to load background texture!\n" );
+		success = false;
+	}
+if( !t63.loadFromFile( "pics/tennis6.3.png" ) )
+	{
+		printf( "Failed to load background texture!\n" );
+		success = false;
+	}
+if( !t7.loadFromFile( "pics/assign7.png" ) )
+	{
+		printf( "Failed to load background texture!\n" );
+		success = false;
+	}
+if( !t8.loadFromFile( "pics/market8.png" ) )
+	{
+		printf( "Failed to load background texture!\n" );
+		success = false;
+	}
+if( !t9.loadFromFile( "pics/project9.png" ) )
+	{
+		printf( "Failed to load background texture!\n" );
+		success = false;
+	}
 	return success;
 }
 
@@ -1060,20 +1118,30 @@ void close()
 	lifeT4.free();
 	lifeT5.free();
 	task1.free();
+	t1.free();
 	task2.free();
+	t2.free();
 	task22.free();
 	task3.free();
+	t3.free();
 	task41.free();
 	task42.free();
 	task43.free();
 	task44.free();
 	task5.free();
+	t5.free();
 	task61.free();
+	t61.free();
 	task62.free();
+	t62.free();
 	task63.free();
+	t63.free();
 	task7.free();
+	t7.free();
 	task8.free();
+	t8.free();
 	task9.free();
+	t9.free();
 	taskdone.free();
     player2.free();
 	point1.free();
@@ -1360,14 +1428,16 @@ int main( int argc, char* args[] )
     //sockets end
 int begin=rand();
 for(int i=0; i<5; i++){
-	todotasks[i]=taskarray[(begin +4)%10];
+	// todotasks[i]=taskarray[(begin +4)%10];
+	todotasks[i]=(begin +4)%10;
 	cout<<(begin +4)%10<<" ";
 	taskarray[(begin +4)%10].taskdoneonce=false;
 	taskarray[(begin +4)%10].dotask=true;
-	
-	todotasks[i].taskdoneonce=false;
+
 	begin+=4;
 }
+
+
 cout<<endl;
 for(int i=0;i<11;i++){
 	cout<<taskarray[i].taskdoneonce<<" "<<taskarray[i].dotask<<endl;
@@ -2584,6 +2654,23 @@ for(int i=0;i<11;i++){
 				point1.render(48*4,48+64);
 				win.render(SCREEN_WIDTH/2 - 193,SCREEN_HEIGHT/2 - 322);//player wins
 				}
+
+			// LTexture taskarray[11]={task1,task2,task22,task3,task5,task61,task62,task63,task7,task8,task9};
+
+			for(int i=0;i<5;i++){
+				if(todotasks[i]==0){t1.render(0,64*2+64*i);}
+				if(todotasks[i]==1){t2.render(0,64*2+64*i);}
+				if(todotasks[i]==2){t2.render(0,64*2+64*i);}
+				if(todotasks[i]==3){t3.render(0,64*2+64*i);}
+				if(todotasks[i]==4){t5.render(0,64*2+64*i);}
+				if(todotasks[i]==5){t61.render(0,64*2+64*i);}
+				if(todotasks[i]==6){t62.render(0,64*2+64*i);}
+				if(todotasks[i]==7){t63.render(0,64*2+64*i);}
+				if(todotasks[i]==8){t7.render(0,64*2+64*i);}
+				if(todotasks[i]==9){t8.render(0,64*2+64*i);}
+				if(todotasks[i]==10){t9.render(0,64*2+64*i);}
+	}
+
 				gMapWindowTexture.render( 0, 0);
 				
 				gPauseTexture.render( 0, 0 );
@@ -2602,3 +2689,4 @@ for(int i=0;i<11;i++){
 
 	return 0;
 }
+
