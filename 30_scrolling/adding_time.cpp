@@ -134,6 +134,9 @@ class Dot
 		
 		void startVel();
 		void stopVel();
+		
+		void startYulu();
+		void stopYulu();
 
     private:
 		//The X and Y offsets of the dot
@@ -492,13 +495,13 @@ void Dot::handleEvent( SDL_Event& e , int m2times)
             		DOT_VEL= 25;
             		break;
             		}
-            case SDLK_y: DOT_VEL =35; break; //yulu increases speed by 10
+            case SDLK_y: DOT_VEL =0; break; //yulu increases speed by 10
             case SDLK_w: DOT_VEL= 0;break;
             case SDLK_s: DOT_VEL= 25;break;
-            case SDLK_UP: mVelY -= DOT_VEL; break;
-            case SDLK_DOWN: mVelY += DOT_VEL; break;
-            case SDLK_LEFT: mVelX -= DOT_VEL; break;
-            case SDLK_RIGHT: mVelX += DOT_VEL; break;
+            case SDLK_UP: mVelY -= DOT_VEL;cout<< "when up is pressed"<<endl; break;
+            case SDLK_DOWN: mVelY += DOT_VEL;cout<< "when down is pressed"<<endl; break;
+            case SDLK_LEFT: mVelX -= DOT_VEL;cout<< "when left is pressed"<<endl; break;
+            case SDLK_RIGHT: mVelX += DOT_VEL;cout<< "when right is pressed"<<endl; break;
         }
     }
     //If a key was released
@@ -507,13 +510,16 @@ void Dot::handleEvent( SDL_Event& e , int m2times)
         //Adjust the velocity
         switch( e.key.keysym.sym )
         {
-            case SDLK_y: DOT_VEL =35; break; //yulu increases speed by 10
+            case SDLK_y: DOT_VEL =0; break; //yulu increases speed by 10
             case SDLK_w: DOT_VEL= 0;break;
             case SDLK_s: DOT_VEL= 25;break;
-            case SDLK_UP: mVelY += DOT_VEL; break;
-            case SDLK_DOWN: mVelY -= DOT_VEL; break;
-            case SDLK_LEFT: mVelX += DOT_VEL; break;
-            case SDLK_RIGHT: mVelX -= DOT_VEL; break;
+            case SDLK_UP: mVelY += DOT_VEL; 
+            cout<< "when up is released"<<endl;
+            break;
+            case SDLK_DOWN: mVelY -= DOT_VEL; cout<< "when down is released"<<endl; break;
+            
+            case SDLK_LEFT: mVelX += DOT_VEL; cout<< "when left is released"<<endl; break;
+            case SDLK_RIGHT: mVelX -= DOT_VEL;cout<< "when right is released"<<endl;  break;
         }
     }
 }
@@ -562,9 +568,9 @@ mCollider.x = mPosX;
     if( ( mPosX < 0 ) || ( mPosX + DOT_WIDTH > LEVEL_WIDTH )  || checkCollision( mCollider, wall, length1 ) )
     {
         //Move back
-      //  cout<< "( mPosX < 0 )"<< ( mPosX < 0 )<<endl;
-      //  cout<< "( mPosX + DOT_WIDTH > LEVEL_WIDTH )"<<( mPosX + DOT_WIDTH > LEVEL_WIDTH ) <<endl;
-      //  cout<< "checkCollision( mCollider, wall, length1 )"<<checkCollision( mCollider, wall, length1 ) <<endl;
+        cout<< "( mPosX < 0 )"<< ( mPosX < 0 )<<endl;
+        cout<< "( mPosX + DOT_WIDTH > LEVEL_WIDTH )"<<( mPosX + DOT_WIDTH > LEVEL_WIDTH ) <<endl;
+        cout<< "checkCollision( mCollider, wall, length1 )"<<checkCollision( mCollider, wall, length1 ) <<endl;
         
         //mPosX=0;
         mPosX -= mVelX;
@@ -579,6 +585,11 @@ mCollider.x = mPosX;
     if( ( mPosY < 0 ) || ( mPosY + DOT_HEIGHT > LEVEL_HEIGHT ) || checkCollision( mCollider, wall, length1 ))
     {
         //Move back
+          cout<< "( mPosY < 0 )"<< ( mPosY < 0 )<<endl;
+        cout<< "( mPosY + DOT_HEIGHT > LEVEL_HEIGHT )"<<( mPosY + DOT_HEIGHT > LEVEL_HEIGHT ) <<endl;
+        cout<< "checkCollision( mCollider, wall, length1 )"<<checkCollision( mCollider, wall, length1 ) <<endl;
+      
+        
         mPosY -= mVelY;
         mCollider.y = mPosY;
     }
@@ -647,6 +658,14 @@ void Ghost::render( int camX, int camY,int isDoc )
 
 //===========
 
+void Dot::startYulu()
+{
+DOT_VEL=0;
+}
+void Dot::stopYulu()
+{
+DOT_VEL=25;
+}
 void Dot::stopVel()
 {
 prevmVelX = mVelX;
@@ -1917,18 +1936,22 @@ int main( int argc, char* args[] )
 						
 						else if( e.key.keysym.sym == SDLK_UP and flag == 1)
 						{
+						cout<< "UP key detected"<< endl;
 							gDotTexture = gKeyPressSurfaces[ KEY_PRESS_SURFACE_UP ];
 						}
 						else if( e.key.keysym.sym == SDLK_DOWN and flag == 1)
 						{
+						cout<< "DOWN key detected"<< endl;
 							gDotTexture = gKeyPressSurfaces[ KEY_PRESS_SURFACE_DOWN ];
 						}
 						else if( e.key.keysym.sym == SDLK_LEFT and flag == 1)
 						{
+						cout<< "LEFT key detected"<< endl;
 							gDotTexture = gKeyPressSurfaces[ KEY_PRESS_SURFACE_LEFT ];
 						}
 						else if( e.key.keysym.sym == SDLK_RIGHT and flag == 1)
 						{
+						cout<< "RIGHT key detected"<< endl;
 							gDotTexture = gKeyPressSurfaces[ KEY_PRESS_SURFACE_RIGHT ];
 						}
 						else if( e.key.keysym.sym == SDLK_1 and flag == 1)
@@ -2457,9 +2480,10 @@ int main( int argc, char* args[] )
 				if(yuluStart + 10000 < SDL_GetTicks() and yulu_end_vel0==0)
 				{
 				yulu_use =0;
-				dot.DOT_VEL =25;
-				dot.mVelX=0;
-				dot.mVelY=0;
+				dot.stopYulu();
+				//dot.DOT_VEL =25;
+				//dot.mVelX=0;
+				//dot.mVelY=0;
 				yulu_end_vel0 =1;
 				}
 				
