@@ -1533,7 +1533,7 @@ int main( int argc, char* args[] )
 
 			//Current time start time
 			Uint32 startTime = 0;
-			Uint32 yuluStart = 0;
+			Uint32 yuluStart = 60000;
 
 			//In memory text stream
 			std::stringstream timeText;
@@ -2560,8 +2560,8 @@ int main( int argc, char* args[] )
 				song_only1 =1;
 				}
 				}
-				//cout<< "yuluStart " << yuluStart<<endl;
-				//cout<< "SDL_GetTicks() " << SDL_GetTicks()<<endl;
+				cout<< "yuluStart " << yuluStart<<endl;
+				cout<< "SDL_GetTicks() " << SDL_GetTicks()<<endl;
 				
 				if(yuluStart + 10000 < SDL_GetTicks() and yulu_end_vel0==0)
 				{
