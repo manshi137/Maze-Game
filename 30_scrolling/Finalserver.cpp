@@ -239,6 +239,9 @@ LTexture gStartTexture;
 LTexture gMapWindowTexture;
 LTexture gInstrWindowTexture;
 LTexture gStopTexture;
+LTexture gPlayerAwinsTexture;
+LTexture gPlayerBwinsTexture;
+LTexture gPlayerABwinsTexture;
 LTexture oops;
 LTexture yulu;
 LTexture nocoins;
@@ -457,11 +460,11 @@ Dot::Dot()
 {
     //Initialize the offsets
     //initial position
-    // mPosX = 300*32;//gate1
-    // mPosY = 57*32;
+    mPosX = 300*32;//gate1
+    mPosY = 57*32;
 
-    mPosX = 21*32; //gate6
-    mPosY = 8*32;
+    // mPosX = 21*32; //gate6
+    // mPosY = 8*32;
 	
     //Set collision box dimension
 	mCollider.w = DOT_WIDTH;
@@ -952,6 +955,40 @@ bool loadMedia()
 		//Set standard alpha blending
 		gStartTexture.setBlendMode( SDL_BLENDMODE_BLEND );
 	}
+	
+	if( !gPlayerAwinsTexture.loadFromFile( "pics/Pwins.png" ) )
+	{
+		printf( "Failed to load front pause texture!\n" );
+		success = false;
+	}
+	else
+	{
+		//Set standard alpha blending
+		gPlayerAwinsTexture.setBlendMode( SDL_BLENDMODE_BLEND );
+	}
+	
+	if( !gPlayerBwinsTexture.loadFromFile( "pics/Fwins.png" ) )
+	{
+		printf( "Failed to load front pause texture!\n" );
+		success = false;
+	}
+	else
+	{
+		//Set standard alpha blending
+		gPlayerBwinsTexture.setBlendMode( SDL_BLENDMODE_BLEND );
+	}
+	
+	if( !gPlayerABwinsTexture.loadFromFile( "pics/tie.png" ) )
+	{
+		printf( "Failed to load front pause texture!\n" );
+		success = false;
+	}
+	else
+	{
+		//Set standard alpha blending
+		gPlayerABwinsTexture.setBlendMode( SDL_BLENDMODE_BLEND );
+	}
+	
 	if( !gStopTexture.loadFromFile( "pics/Stop.png" ) )
 	{
 		printf( "Failed to load front pause texture!\n" );
@@ -964,11 +1001,11 @@ bool loadMedia()
 	}
 
 	
-	gKeyPressSurfaces[ KEY_PRESS_SURFACE_RIGHT ].loadFromFile( "pics/ferbright.png" );
-	gKeyPressSurfaces[ KEY_PRESS_SURFACE_LEFT ].loadFromFile( "pics/ferbleft.png");
-	gKeyPressSurfaces[ KEY_PRESS_SURFACE_UP ].loadFromFile( "pics/ferbleft.png");
-	gKeyPressSurfaces[ KEY_PRESS_SURFACE_DOWN ].loadFromFile( "pics/ferbleft.png");
-	gKeyPressSurfaces[ KEY_PRESS_SURFACE_DEFAULT ].loadFromFile( "pics/ferbleft.png");
+	gKeyPressSurfaces[ KEY_PRESS_SURFACE_RIGHT ].loadFromFile( "pics/phinright.png" );
+	gKeyPressSurfaces[ KEY_PRESS_SURFACE_LEFT ].loadFromFile( "pics/phinleft.png");
+	gKeyPressSurfaces[ KEY_PRESS_SURFACE_UP ].loadFromFile( "pics/phinleft.png");
+	gKeyPressSurfaces[ KEY_PRESS_SURFACE_DOWN ].loadFromFile( "pics/phinleft.png");
+	gKeyPressSurfaces[ KEY_PRESS_SURFACE_DEFAULT ].loadFromFile( "pics/phinleft.png");
 	
 	//Load ghost texture1
 	if( !ghostTexture1.loadFromFile( "pics/doc.png" ) )
@@ -1126,7 +1163,7 @@ bool loadMedia()
 		printf( "Failed to load background texture!\n" );
 		success = false;
 	}
-    if( !player2.loadFromFile( "pics/phinleft.png" ) )
+    if( !player2.loadFromFile( "pics/ferbleft.png" ) )
 	{
 		printf( "Failed to load background texture!\n" );
 		success = false;
@@ -1249,6 +1286,9 @@ void close()
 	gPauseTexture.free();
 	gStartTexture.free();
 	gStopTexture.free();
+	gPlayerAwinsTexture.free();
+	gPlayerBwinsTexture.free();
+	gPlayerABwinsTexture.free();
 	lifeT1.free();
 	lifeT2.free();
 	lifeT3.free();
@@ -1655,6 +1695,9 @@ for(int i=0;i<11;i++){
 			Uint8 c = 0;
 			Uint8 d = 0;
 			Uint8 ee = 0;
+			Uint8 wA = 0;
+			Uint8 wB = 0;
+			Uint8 wAB = 0;
 
 
 			//The dot that will be moving around on the screen
@@ -2138,6 +2181,16 @@ for(int i=0;i<11;i++){
 
 			//While application is running
 			int ind1,ind2;
+			int points2;
+			int pointsB =0;
+			int alreadywon =0;
+			int timeAwon = 120001;
+			int timeBwon = 120001;
+			int pointsA =0;
+			int start_timeonce=0;
+			int player2dead =0;
+			int I_die =0;
+			
 			while( !quit )
 			{
 				
@@ -2157,7 +2210,8 @@ for(int i=0;i<11;i++){
 						{
 						d= 0;
 						flag=1;
-						startTime = SDL_GetTicks();
+						if(start_timeonce==0)
+						{startTime = SDL_GetTicks(); start_timeonce=1;}
 						flag1=0;
 						}
 						else if( e.key.keysym.sym == SDLK_RETURN )
@@ -2523,23 +2577,29 @@ for(int i=0;i<11;i++){
 					int index1 = strr.find('=');
 					int index2 = strr.find('.');
 					int index = strr.find(',');
+                    int index4 = strr.find(":");
+
 					//points=5. index1=6,index2=8
 					string str3 =strr.substr(index1+1 ,index2-index1-1);
 					string str1= strr.substr(index2+1, index-index2-1);
-					string str2 =strr.substr(index+1 ,strr.length()-1-index);
-
+					string str2 =strr.substr(index+1 ,index4-1-index);
+                    string str4= strr.substr(index4+1, strr.length()-1-index4);
+                    player2dead=stoi(str4);
+					pointsB = stoi(str3);
 					cout<<"points:"<<stoi(str3)<<" ";
+					points2=stoi(str3);
 					ind1 = stoi(str1);
 					ind2 = stoi(str2);
 					cout<< "ind1 :"<< ind1 << endl;
 					cout<< "ind2 :"<< ind2<< endl;
+                    cout<< "player2dead:"<< stoi(str4);
 
-								string ss = "POINTS="+to_string(dot.points)+"." +to_string(dot.getPosX())+","+ to_string(dot.getPosY());
+								string ss = "POINTS="+to_string(dot.points)+"." +to_string(dot.getPosX())+","+ to_string(dot.getPosY())+":"+to_string(I_die);
 								char* hello2 = const_cast<char*>(ss.c_str());
 
 					send(new_socket, hello2, strlen(hello2), 0);
 
-				//sockets end
+				//sockets endf
 
 
 
@@ -2592,7 +2652,7 @@ for(int i=0;i<11;i++){
 				// cout<<dot.life<<":life ";
 				cout<<"isabella:"<<dot.points;
 				Mix_PlayChannel( -1, gIsabella, 0 );
-				// dot.points+=1;//collision with candace increases 1 point
+				dot.points+=1;//collision with candace increases 1 point
 				cout<<dot.points;
 				dot.manshi4 = 2;
 				}}
@@ -2601,7 +2661,7 @@ for(int i=0;i<11;i++){
 				// cout<<dot.life<<":life ";
 				cout<<"vanessa:"<<dot.points;
 				Mix_PlayChannel( -1, gVanessa, 0 );
-				dot.points+=1;//collision with vanessa increases 1 point
+				// dot.points+=1;//collision with vanessa increases 1 point
 				cout<<dot.points;
 				dot.manshi5 = 2;
 				}}
@@ -2617,8 +2677,10 @@ for(int i=0;i<11;i++){
 				lifeT1.render( 0,0+48);
 				if(alpha==0) {
 				Mix_PlayChannel( -1, gMedium, 0 );
-				ee= 255;
+				wB= 255;
+				dot.points= 0;
 				alpha++;
+				I_die =1;
 				}
 				}
 				
@@ -2627,6 +2689,9 @@ for(int i=0;i<11;i++){
 				gMapWindowTexture.setAlpha(c);
 				gInstrWindowTexture.setAlpha(d);
 				gStopTexture.setAlpha(ee);
+				gPlayerAwinsTexture.setAlpha(wA);
+				gPlayerBwinsTexture.setAlpha(wB);
+				gPlayerABwinsTexture.setAlpha(wAB);
 				
 
 				//Render objects
@@ -2929,13 +2994,74 @@ for(int i=0;i<11;i++){
 				
 				if(SDL_GetTicks()-startTime > 120000)
 				{
-				ee=255;
+				if(alreadywon==0)
+				{
+					if(dot.points > pointsB)
+					{
+						wA= 255;
+					}
+					else if(dot.points < pointsB)
+					{
+						wB = 255;
+					}
+					else 
+						{
+						wAB = 255;
+						}
+				
 				if(song_only1==0){
 				Mix_PlayChannel( -1, gMedium, 0 );
 				
 				song_only1 =1;
 				
 				}
+				
+				}
+				
+				}
+				
+				else
+				{
+                    cout<<"&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&";
+                    if( player2dead==1)
+				{
+					wA = 255;
+					alreadywon =1;
+					if(song_only1==0){
+				Mix_PlayChannel( -1, gMedium, 0 );
+				}	
+				}
+					if(dot.points>=5)
+					{
+					timeAwon = SDL_GetTicks();
+					if(timeAwon < timeBwon)
+					{wA = 255;
+					alreadywon =1;
+					if(song_only1==0){
+				Mix_PlayChannel( -1, gMedium, 0 );
+				
+				song_only1 =1;
+				
+				}
+						}
+					
+					}
+					if(pointsB>= 5)
+					{
+					timeBwon = SDL_GetTicks();
+					if(timeAwon > timeBwon)
+					{
+					wB = 255;
+					alreadywon =1;
+					if(song_only1==0){
+				Mix_PlayChannel( -1, gMedium, 0 );
+				
+				song_only1 =1;
+				
+				}
+					}
+					}
+				
 				}
 				
 				if(yuluStart + 10000 < SDL_GetTicks() )
@@ -2964,6 +3090,10 @@ for(int i=0;i<11;i++){
 				gStartTexture.render(0, 0);
 				gInstrWindowTexture.render(0,0);
 				gStopTexture.render(0,0);
+				gPlayerAwinsTexture.render(0,0);
+				gPlayerBwinsTexture.render(0,0);
+				gPlayerABwinsTexture.render(0,0);
+				
 				//Update screen
 				SDL_RenderPresent( gRenderer );
 				//if(dot.pointsupdated){cout<<dot.points<<" ";}
