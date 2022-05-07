@@ -1,10 +1,10 @@
 # Phineas and Ferb in IITD
 ## To run game:
 ## Server: 
-        Make a folder containing Finalserver.cpp file, makefile, pics folder and Sound folder on one device.
+        Make a folder containing Finalserver.cpp file, makefile, lazy.ttf, pics folder and Sound folder on one device.
         Extract the makefile from "Makefile for server" folder.
 ## Client: 
-        Make a folder containing Finalclient.cpp file, makefile, pics folder and Sound folder on other device. 
+        Make a folder containing Finalclient.cpp file, makefile, lazy.ttf, pics folder and Sound folder on other device. 
         Extract the makefile from "Makefile for client" folder.
 
 ## Important
