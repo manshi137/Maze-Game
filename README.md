@@ -17,3 +17,6 @@ Type make and press enter.
 Type ./game and press enter.
 Game window will be displayed.
 
+## Presentation
+https://docs.google.com/presentation/d/18rBWawRipRd2-4l0kqziSnQjoDOdBzwOUyxxlbSz9Yw/edit?usp=sharing
+
