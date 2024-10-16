@@ -27,7 +27,7 @@ make
 ```
 ### Run: Type ./game and press enter.
 ```
-        ./game
+./game
 ```
 Game window will be displayed.
 
