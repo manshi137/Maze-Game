@@ -1,5 +1,9 @@
 # Phineas and Ferb in IITD
-## To run game:
+
+## To run this 2-player game:
+2 Devices are needed.
+- One player can act as server and the other as client (both are equivalent players)
+  
 ## Server: 
  Make a folder containing Finalserver.cpp file, makefile, lazy.ttf, pics folder and Sound folder on one device.
  Extract the makefile from "Makefile for server" folder.
